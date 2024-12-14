@@ -6,6 +6,7 @@ import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
+import com.spring.boot.jpa.Persistence.models.student.Student;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class Department {
     private String department_name;
 
     @OneToOne
-    @JoinColumn(name = "hod_id")
+    @JoinColumn(name = "hod_id", unique = true)
     @JsonBackReference
     private Lecturer HOD;
 
@@ -41,4 +42,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     @JsonManagedReference
     private List<Lecturer> lecturer;
+
+    @OneToMany(mappedBy = "department")
+    @JsonManagedReference
+    private List<Student> students;
 }

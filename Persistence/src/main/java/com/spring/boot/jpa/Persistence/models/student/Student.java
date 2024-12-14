@@ -1,6 +1,8 @@
 package com.spring.boot.jpa.Persistence.models.student;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.spring.boot.jpa.Persistence.models.department.Department;
+import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +19,7 @@ public class Student {
     private Integer id;
     @Column(unique = true)
     private String nrc_number;
-    @Column(updatable = false)
+    @Column(unique = true, updatable = false)
     private String student_id;
     private String firstname;
     private String lastname;
@@ -27,7 +29,17 @@ public class Student {
     private String email;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "school_id")
     @JsonBackReference
     private School school;
+
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    @JsonBackReference
+    private Program program;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    @JsonBackReference
+    private Department department;
 }
