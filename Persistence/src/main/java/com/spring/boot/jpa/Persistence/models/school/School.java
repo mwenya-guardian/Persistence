@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.student.Student;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 public class School {
     @Id
-    private Integer id;
+    @GeneratedValue
+    private Integer school_id;
+    @Column(unique = true)
+    private String Name;
 
     @OneToMany(mappedBy = "school")
     @JsonManagedReference

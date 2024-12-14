@@ -6,11 +6,18 @@ import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
 import com.spring.boot.jpa.Persistence.models.program.ProgramCourseList;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@NoArgsConstructor
 public class Course {
     @Id
-    private Integer id;
+    private Integer course_id;
+    @Column(unique = true)
+    private String courseCode;
+    private String courseName;
 
     @ManyToOne
     @JoinColumn

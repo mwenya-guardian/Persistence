@@ -12,7 +12,10 @@ import java.util.List;
 @Entity
 public class Program {
     @Id
-    private Integer id;
+    @GeneratedValue
+    private Integer program_id;
+    @Column(unique = true)
+    private String programCode;
     @Column(nullable = false)
     private String programName;
 
