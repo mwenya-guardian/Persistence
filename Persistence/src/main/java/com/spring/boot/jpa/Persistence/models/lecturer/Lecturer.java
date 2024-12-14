@@ -1,7 +1,9 @@
 package com.spring.boot.jpa.Persistence.models.lecturer;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spring.boot.jpa.Persistence.models.department.Department;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,4 +13,14 @@ import lombok.NoArgsConstructor;
 public class Lecturer {
     @Id
     private Integer id;
+
+    @ManyToOne
+    @JoinColumn
+    @JsonBackReference
+    private Department department;
+
+    @OneToOne(mappedBy = "HOD")
+    @JsonManagedReference
+    private Department department_head;
+
 }
