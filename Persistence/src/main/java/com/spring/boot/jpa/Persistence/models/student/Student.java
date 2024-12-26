@@ -6,6 +6,7 @@ import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Date;
@@ -24,6 +25,7 @@ public class Student {
     private String firstname;
     private String lastname;
     private String address;
+    @Generated
     private Date dob;
     @Column(unique = true)
     private String email;

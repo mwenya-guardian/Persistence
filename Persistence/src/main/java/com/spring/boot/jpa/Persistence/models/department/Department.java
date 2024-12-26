@@ -19,7 +19,10 @@ import java.util.List;
 public class Department {
     @Id
     private Integer id;
-    private String department_name;
+    @Column(name = "department_name")
+    private String departmentName;
+    @Column(unique = true)
+    private String departmentCode;
 
     @OneToOne
     @JoinColumn(name = "hod_id", unique = true)

@@ -37,7 +37,7 @@ public class Lecturer {
     @JsonManagedReference
     private Department department_head;
 
-    @OneToOne(mappedBy = "lecturer")
+    @OneToMany(mappedBy = "lecturer")
     @JsonManagedReference
     private Lecture lecture;
 
