@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
     List<Course> findAllByDepartment(Integer departmentId);
+    Course findByCourseCode(String courseCode);
+    void deleteByCourseCode(String courseCode);
+    List<Course> findAllByCourseNameContaining(String name);
 }
 
