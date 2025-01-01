@@ -38,7 +38,7 @@ public class StudentController {
     public ResponseEntity<Student> createStudent(@RequestBody Sdto obj){
         var student = new Student();
         student.setFirstname(obj.getFirstname());
-        student.setNrc_number(obj.getNrc_number());
+        student.setNrcNumber(obj.getNrc_number());
         return new ResponseEntity<>(studentRepository.save(student), HttpStatus.CREATED);
     }
 }

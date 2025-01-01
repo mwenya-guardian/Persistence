@@ -1,5 +1,8 @@
 package com.spring.boot.jpa.Persistence.Services.program;
 
+import com.spring.boot.jpa.Persistence.dtos.program.ProgramRequestDto;
+import com.spring.boot.jpa.Persistence.dtos.program.ProgramResponseDto;
+import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.repositories.program.ProgramRepository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,4 +15,12 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class ProgramService {
     private ProgramRepository programRepository;
+    private ModelMappers modelMappers;
+
+    //Create
+    public ProgramResponseDto createProgram(ProgramRequestDto programRequestDto){
+        var newProgram = modelMappers.mapToProgram(programRequestDto);
+        var savedProgram = programRepository.save(newProgram);
+        return modelMappers.mapToProgramResponse(savedProgram);
+    }
 }

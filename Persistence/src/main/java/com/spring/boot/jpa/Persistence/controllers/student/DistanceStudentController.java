@@ -41,8 +41,8 @@ public class DistanceStudentController {
     public ResponseEntity<DistanceStudent> createStudent(@RequestBody Dsdto obj) {
         var student =  new DistanceStudent();
             student.setFirstname(obj.getFirstname());
-            student.setStudent_id(obj.getStudent_id());
-            student.setNrc_number(obj.getNrc_number());
+            student.setStudentId(obj.getStudent_id());
+            student.setNrcNumber(obj.getNrc_number());
             student.setAddress(obj.getAddress());
             student.setTimeOfStudy(obj.getTimeOfStudy());
         return new ResponseEntity<>(distanceStudentRepository.save(student), HttpStatus.CREATED);

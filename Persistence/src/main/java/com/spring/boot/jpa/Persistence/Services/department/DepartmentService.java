@@ -23,8 +23,7 @@ public class DepartmentService {
     private DepartmentRepository departmentRepository;
     private ModelMappers modelMappers;
 
-    //Create And Update
-    @ResponseStatus(value = HttpStatus.CREATED)
+    //Create
     public DepartmentResponseDto createDepartment(DepartmentRequestDto departmentRequestDto){
         var department = modelMappers.mapToDepartment(departmentRequestDto);
         var savedDepartment = departmentRepository.save(department);
@@ -32,14 +31,13 @@ public class DepartmentService {
     }
 
     //Update
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public DepartmentResponseDto updateDepartment(DepartmentRequestDto departmentRequestDto, Integer Id){
         var newDepartment = modelMappers.mapToDepartment(departmentRequestDto);
             newDepartment.setId(Id);
                 var savedDepartment = departmentRepository.save(newDepartment);
         return modelMappers.mapToDepartmentResponse(savedDepartment);
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public DepartmentResponseDto updateDepartment(DepartmentRequestDto departmentRequestDto, String departmentCode){
         var newDepartment = modelMappers.mapToDepartment(departmentRequestDto);
             Integer Id = departmentRepository
@@ -51,7 +49,6 @@ public class DepartmentService {
     }
 
     //Retrieve
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public List<DepartmentResponseDto> findAllDepartment(){
         var departmentList = departmentRepository.findAll();
         return departmentList
@@ -60,7 +57,7 @@ public class DepartmentService {
                 .map(modelMappers::mapToDepartmentResponse)
                 .toList();
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public List<DepartmentResponseDto> findAllDepartmentsByName(String name){
         var departmentList = departmentRepository.findAllByDepartmentNameContaining(name);
         return departmentList
@@ -69,28 +66,27 @@ public class DepartmentService {
                 .map(modelMappers::mapToDepartmentResponse)
                 .toList();
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public DepartmentResponseDto findByDepartmentCode(String code){
         var department = departmentRepository.findByDepartmentCode(code);
         return modelMappers.mapToDepartmentResponse(department);
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public DepartmentResponseDto findByDepartmentId(Integer Id){
         var department = departmentRepository.findById(Id).orElse(null);
         return modelMappers.mapToDepartmentResponse(department);
     }
 
     //Delete
-    @ResponseStatus(value = HttpStatus.OK)
     public void deleteDepartment(DepartmentRequestDto departmentRequestDto){
         var department = modelMappers.mapToDepartment(departmentRequestDto);
         departmentRepository.delete(department);
     }
-    @ResponseStatus(value = HttpStatus.OK)
+    
     public void deleteDepartment(Integer Id){
         departmentRepository.deleteById(Id);
     }
-    @ResponseStatus(value = HttpStatus.OK)
+    
     public void deleteDepartment(String code){
         departmentRepository.deleteByDepartmentCode(code);
     }

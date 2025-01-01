@@ -4,16 +4,19 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Lecture {
     @Id
     @GeneratedValue
     private Integer lecture_id;
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "course")

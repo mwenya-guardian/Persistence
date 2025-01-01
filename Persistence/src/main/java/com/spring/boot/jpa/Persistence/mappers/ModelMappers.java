@@ -12,6 +12,7 @@ import com.spring.boot.jpa.Persistence.dtos.program.ProgramResponseDto;
 import com.spring.boot.jpa.Persistence.dtos.school.SchoolRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.school.SchoolResponseDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
+import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
@@ -74,5 +75,9 @@ public class ModelMappers {
     public Student mapToStudent(StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
         return newStudent;
+    }
+    public StudentResponseDto mapToStudentRespone(Student student){
+        StudentResponseDto studentResponseDto = new StudentResponseDto();
+        return studentResponseDto;
     }
 }

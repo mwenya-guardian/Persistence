@@ -1,6 +1,7 @@
 package com.spring.boot.jpa.Persistence.models.student;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.spring.boot.jpa.Persistence.models.EntityBaseClass;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
@@ -8,27 +9,26 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.core.annotation.AliasFor;
 
 import java.sql.Date;
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"age"}))
-public class Student {
+public class Student extends EntityBaseClass {
     @Id
     @GeneratedValue
     private Integer id;
-    @Column(unique = true)
-    private String nrc_number;
-    @Column(unique = true, updatable = false)
-    private String student_id;
-    private String firstname;
-    private String lastname;
-    private String address;
+    @Column(unique = true, name = "NRC_Number", nullable = false)
+    private String nrcNumber;
+    @Column(unique = true, updatable = false, name = "student_id")
+    private String studentId;
+
     @Generated
-    private Date dob;
-    @Column(unique = true)
-    private String email;
+    private Date enrolled;
 
     @ManyToOne
     @JoinColumn(name = "school_id")

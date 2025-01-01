@@ -5,14 +5,17 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Lecturer {
     @Id
     @GeneratedValue
@@ -39,6 +42,6 @@ public class Lecturer {
 
     @OneToMany(mappedBy = "lecturer")
     @JsonManagedReference
-    private Lecture lecture;
+    private List<Lecture> lecture;
 
 }

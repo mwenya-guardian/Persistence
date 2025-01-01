@@ -22,7 +22,7 @@ public class Course {
     private String courseName;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "department_id")
     @JsonBackReference
     private Department department;
 

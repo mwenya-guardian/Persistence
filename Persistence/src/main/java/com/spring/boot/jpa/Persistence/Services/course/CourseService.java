@@ -4,6 +4,7 @@ import com.spring.boot.jpa.Persistence.dtos.course.CourseRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.course.Course;
+import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.repositories.course.CourseRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,14 +33,14 @@ public class CourseService {
     }
 
     //Update
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public CourseResponseDto updateCourse(CourseRequestDto courseRequestDto, Integer Id){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
             newCourse.setCourse_id(Id);
                 var savedCourse = courseRepository.save(newCourse);
         return modelMappers.mapToCourseResponse(savedCourse);
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public CourseResponseDto updateCourse(CourseRequestDto courseRequestDto, String courseCode){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
         Integer Id = courseRepository
@@ -51,29 +52,29 @@ public class CourseService {
     }
 
     //Delete
-    @ResponseStatus(value = HttpStatus.OK)
     public void deleteCourse(Integer courseId){
         courseRepository.deleteById(courseId);
     }
-    @ResponseStatus(value = HttpStatus.OK)
+    
     public void deleteCourse(String courseCode){
         courseRepository.deleteByCourseCode(courseCode);
     }
-    @ResponseStatus(value = HttpStatus.OK)
+    
     public void deleteCourse(CourseRequestDto courseRequestDto){
         var course = modelMappers.mapToCourse(courseRequestDto);
         courseRepository.delete(course);
     }
 
     //Retrieve
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public List<CourseResponseDto> findAllCoursesByDepartment(Integer id){
-        return courseRepository.findAllByDepartment(id)
+        var department = new Department();
+            department.setId(id);
+        return courseRepository.findAllByDepartment(department)
                 .stream()
                 .map(modelMappers::mapToCourseResponse)
                 .toList();
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public List<CourseResponseDto> findAllCourses(){
         List<Course> courseList = courseRepository.findAll();
         List<CourseResponseDto> courseResponseDtoList = courseList
@@ -82,7 +83,7 @@ public class CourseService {
                 .toList();
         return courseResponseDtoList;
     }
-    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    
     public List<CourseResponseDto> findAllCourseByName(String courseName){
         List<Course> courses = courseRepository.findAllByCourseNameContaining(courseName);
         List<CourseResponseDto> responseDtos = courses
