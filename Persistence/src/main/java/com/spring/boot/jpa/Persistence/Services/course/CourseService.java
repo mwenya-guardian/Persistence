@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -33,7 +31,6 @@ public class CourseService {
     }
 
     //Update
-    
     public CourseResponseDto updateCourse(CourseRequestDto courseRequestDto, Integer Id){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
             newCourse.setCourse_id(Id);

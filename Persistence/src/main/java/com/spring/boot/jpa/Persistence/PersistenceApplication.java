@@ -23,7 +23,7 @@ public class PersistenceApplication {
 											   StudentRepository studentRepository){
 		Faker faker = new Faker();
 		return args -> {
-			for(long i = 0; i < 10000; i++) {
+			for(long i = 0; i < 500; i++) {
 				Student student = new Student();
 				student.setStudentId(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
 				student.setFirstname(faker.name().firstName());
@@ -38,10 +38,11 @@ public class PersistenceApplication {
 						.append(faker.number().numberBetween(0, 5))
 						.toString());
 				student.setCountry(faker.country().name());
-				student.setProvince(faker.name().title());
+				student.setProvince(faker.nation().capitalCity());
 				student.setDistrict(faker.country().capital());
 				studentRepository.save(student);
 			}
+			studentService.setStudentRepository(studentRepository);
 			studentService.findAllStudents()
 					.stream()
 					.parallel()
