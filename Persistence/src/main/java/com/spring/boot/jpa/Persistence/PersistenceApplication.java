@@ -2,6 +2,7 @@ package com.spring.boot.jpa.Persistence;
 
 import com.github.javafaker.Faker;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
+import com.spring.boot.jpa.Persistence.models.EntityBaseClass;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,8 +23,9 @@ public class PersistenceApplication {
 	public CommandLineRunner commandLineRunner(StudentService studentService,
 											   StudentRepository studentRepository){
 		Faker faker = new Faker();
+		String[] nrc = new String[10], snumber = new String[10];
 		return args -> {
-			for(long i = 0; i < 500; i++) {
+			for(int i = 0, j = 0; i < 500; i++) {
 				Student student = new Student();
 				student.setStudentId(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
 				student.setFirstname(faker.name().firstName());
@@ -37,10 +39,17 @@ public class PersistenceApplication {
 						.append("/")
 						.append(faker.number().numberBetween(0, 5))
 						.toString());
-				student.setCountry(faker.country().name());
+				student.setNationality(faker.country().name());
 				student.setProvince(faker.nation().capitalCity());
 				student.setDistrict(faker.country().capital());
-				studentRepository.save(student);
+				var s = studentRepository.save(student);
+				if(j < nrc.length){
+					snumber[j] = s.getStudentId();
+					nrc[j++] = s.getNrcNumber();
+				}
+
+
+
 			}
 			studentService.setStudentRepository(studentRepository);
 			studentService.findAllStudents()
@@ -51,13 +60,28 @@ public class PersistenceApplication {
 			studentRepository.findAllByFirstnameContaining("J")
 					.stream()
 					.parallel()
+					.map(arg ->{
+						return ((EntityBaseClass)arg);
+					})
 					.forEach(System.out::println);
-			studentRepository.findAllByCountry("america")
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			studentRepository.findAllByNationality("america")
 					.stream()
 					.parallel()
 					.forEach(System.out::println);
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
+			for(String i: nrc){
+				System.out.println(
+						studentRepository.findByNrcNumber(i));
+				studentRepository.deleteByNrcNumber(i);
 
+			}
+			for(String i: snumber){
+				System.out.println(
+						studentRepository.findByStudentId(i));
+				studentRepository.deleteByStudentId(i);
+			}
 
 		};
 	}

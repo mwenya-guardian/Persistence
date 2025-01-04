@@ -28,7 +28,7 @@ public class Student extends EntityBaseClass {
     private String studentId;
 
     @Generated
-    private Date enrolled;
+    private Date enrollmentDate;
 
     @ManyToOne
     @JoinColumn(name = "school_id")
@@ -44,4 +44,5 @@ public class Student extends EntityBaseClass {
     @JoinColumn(name = "department_id")
     @JsonBackReference
     private Department department;
+
 }

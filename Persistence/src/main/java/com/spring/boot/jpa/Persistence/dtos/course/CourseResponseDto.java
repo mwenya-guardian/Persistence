@@ -1,4 +1,8 @@
 package com.spring.boot.jpa.Persistence.dtos.course;
 
-public class CourseResponseDto {
-}
+public record CourseResponseDto (
+    String courseCode,
+    String courseName,
+    String departmentName,
+    String departmentCode
+) {}

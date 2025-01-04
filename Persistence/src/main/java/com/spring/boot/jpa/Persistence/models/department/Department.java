@@ -49,4 +49,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     @JsonManagedReference
     private List<Student> students;
+
+    public Department(Integer id){
+        this.id = id;
+    }
 }

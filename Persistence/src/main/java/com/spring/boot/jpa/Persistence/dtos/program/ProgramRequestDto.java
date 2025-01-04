@@ -1,4 +1,11 @@
 package com.spring.boot.jpa.Persistence.dtos.program;
 
-public class ProgramRequestDto {
-}
+import java.util.List;
+
+public record ProgramRequestDto(
+      String programCode,
+      String programName,
+      String schoolId,
+      String departmentId,
+      List<String> programCourseList
+) {}

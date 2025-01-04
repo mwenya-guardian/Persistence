@@ -3,6 +3,7 @@ package com.spring.boot.jpa.Persistence.models.lecturer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.boot.jpa.Persistence.models.EntityBaseClass;
+import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
 import jakarta.persistence.*;
@@ -40,5 +41,12 @@ public class Lecturer extends EntityBaseClass {
     @OneToMany(mappedBy = "lecturer")
     @JsonManagedReference
     private List<Lecture> lecture;
+
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    private List<Course> course;
+
+    public Lecturer(Integer id){
+        this.id = id;
+    }
 
 }

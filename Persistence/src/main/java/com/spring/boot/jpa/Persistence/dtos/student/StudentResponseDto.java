@@ -1,4 +1,24 @@
 package com.spring.boot.jpa.Persistence.dtos.student;
 
-public class StudentResponseDto {
-}
+import java.util.Date;
+
+public record StudentResponseDto (
+        String nrcNumber,
+        String studentId,
+        String firstname,
+        String lastname,
+        String address,
+        String province,
+        String district,
+        String nationality,
+        String phoneNumber,
+        String email,
+        Date dob,
+        Date enrollmentDate,
+        String schoolName,
+        String programName,
+        String departmentName,
+        String schoolCode,
+        String programCode,
+        String departmentCode
+){}

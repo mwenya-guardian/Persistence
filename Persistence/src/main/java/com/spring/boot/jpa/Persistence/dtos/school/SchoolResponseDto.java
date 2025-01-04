@@ -1,4 +1,6 @@
 package com.spring.boot.jpa.Persistence.dtos.school;
 
-public class SchoolResponseDto {
-}
+public record SchoolResponseDto(
+        String schoolCode,
+        String schoolName
+){}

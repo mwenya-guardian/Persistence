@@ -18,7 +18,7 @@ public class EntityBaseClass {
     private String address;
     private String province;
     private String district;
-    private String country;
+    private String nationality;
     private String phoneNumber;
     @Column(unique = true)
     private String email;

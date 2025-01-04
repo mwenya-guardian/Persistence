@@ -6,9 +6,11 @@ import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 @Entity
 public class Program {
     @Id
@@ -19,8 +21,8 @@ public class Program {
     @Column(nullable = false)
     private String programName;
 
-    @OneToOne(mappedBy = "program")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "program")
+    @JsonBackReference
     private ProgramCourseList programCourseList;
 
     @ManyToOne

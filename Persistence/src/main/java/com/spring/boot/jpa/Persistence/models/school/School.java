@@ -17,8 +17,10 @@ public class School {
     @Id
     @GeneratedValue
     private Integer school_id;
+    @Column(name = "school_code", unique = true)
+    private String schoolCode;
     @Column(unique = true)
-    private String Name;
+    private String schoolName;
 
     @OneToMany(mappedBy = "school")
     @JsonManagedReference
@@ -31,4 +33,8 @@ public class School {
     @OneToMany(mappedBy = "school")
     @JsonManagedReference
     private List<Program> programs;
+
+    public School(Integer id){
+        this.school_id = id;
+    }
 }

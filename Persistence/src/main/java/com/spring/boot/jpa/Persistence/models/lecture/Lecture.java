@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -16,7 +18,9 @@ public class Lecture {
     @Id
     @GeneratedValue
     private Integer lecture_id;
-    private String name;
+    private String code;
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     @ManyToOne
     @JoinColumn(name = "course")
