@@ -38,4 +38,8 @@ public class Program {
     @OneToMany(mappedBy = "program")
     @JsonManagedReference
     private List<Student> students;
+
+    public Program(Integer id){
+        this.program_id = id;
+    }
 }

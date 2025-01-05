@@ -24,6 +24,7 @@ import com.spring.boot.jpa.Persistence.models.student.Student;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 @Component
 public class ModelMappers {
@@ -135,26 +136,88 @@ public class ModelMappers {
     }
     public Program mapToProgram(ProgramRequestDto programRequestDto){
         Program newProgram = new Program();
+            newProgram.setProgramCode(programRequestDto.programCode());
+            newProgram.setProgramName(programRequestDto.programName());
+            newProgram.setDepartment(new Department(
+                    Integer.getInteger(programRequestDto.departmentId())
+            ));
+        newProgram.setSchool(new School(
+                Integer.getInteger(programRequestDto.schoolId())
+        ));
         return newProgram;
     }
     public ProgramResponseDto mapToProgramResponse(Program program){
-        ProgramResponseDto newProgramResponseDto = new ProgramResponseDto();
+        ProgramResponseDto newProgramResponseDto = new ProgramResponseDto(
+                program.getProgramCode(),
+                program.getProgramName(),
+                program.getSchool().getSchoolCode(),
+                program.getSchool().getSchoolName(),
+                program.getDepartment().getDepartmentName(),
+                program.getDepartment().getDepartmentName(),
+                new ArrayList<>()
+        );
         return newProgramResponseDto;
     }
     public School mapToSchool(SchoolRequestDto schoolRequestDto){
         School school = new School();
+            school.setSchoolCode(schoolRequestDto.schoolCode());
+            school.setSchoolName(schoolRequestDto.schoolName());
         return school;
     }
-    public SchoolResponseDto mapToSchoolResponse(){
-        SchoolResponseDto schoolResponseDto = new SchoolResponseDto();
+    public SchoolResponseDto mapToSchoolResponse(School school){
+        SchoolResponseDto schoolResponseDto = new SchoolResponseDto(
+                school.getSchoolCode(),
+                school.getSchoolName()
+        );
         return schoolResponseDto;
     }
     public Student mapToStudent(StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
+            newStudent.setStudentId(studentRequestDto.studentId());
+            newStudent.setFirstname(studentRequestDto.firstname());
+            newStudent.setLastname(studentRequestDto.lastname());
+            newStudent.setDistrict(studentRequestDto.district());
+            newStudent.setProvince(studentRequestDto.province());
+            newStudent.setNationality(studentRequestDto.nationality());
+            newStudent.setDob(new Date(studentRequestDto.dob().getTime()));
+            newStudent.setNrcNumber(studentRequestDto.nrcNumber());
+            newStudent.setPhoneNumber(studentRequestDto.phoneNumber());
+            newStudent.setEmail(studentRequestDto.email());
+            newStudent.setAddress(studentRequestDto.address());
+            newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
+            newStudent.setSchool(new School(
+                    Integer.getInteger(studentRequestDto.schoolId())
+            ));
+            newStudent.setDepartment(new Department(
+                    Integer.getInteger(studentRequestDto.schoolId())
+            ));
+            newStudent.setSchool(new School(
+                    Integer.getInteger(studentRequestDto.departmentId())
+            ));
         return newStudent;
     }
     public StudentResponseDto mapToStudentRespone(Student student){
-        StudentResponseDto studentResponseDto = new StudentResponseDto();
+        StudentResponseDto studentResponseDto = new StudentResponseDto(
+                student.getNrcNumber(),
+                student.getStudentId(),
+                student.getFirstname(),
+                student.getLastname(),
+                student.getAddress(),
+                student.getProvince(),
+                student.getDistrict(),
+                student.getNationality(),
+                student.getPhoneNumber(),
+                student.getEmail(),
+                new java.util.Date(student.getDob().getTime()),
+                new java.util.Date(student.getEnrollmentDate().getTime()),
+                student.getSchool().getSchoolName(),
+                student.getProgram().getProgramName(),
+                student.getDepartment().getDepartmentName(),
+                student.getSchool().getSchoolCode(),
+                student.getProgram().getProgramCode(),
+                student.getDepartment().getDepartmentCode()
+
+        );
         return studentResponseDto;
     }
 }
