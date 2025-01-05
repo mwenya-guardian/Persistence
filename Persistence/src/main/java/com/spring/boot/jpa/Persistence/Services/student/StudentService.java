@@ -26,7 +26,7 @@ public class StudentService {
     public StudentResponseDto createStudent(StudentRequestDto studentRequestDto){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
         var savedStudent = studentRepository.save(newStudent);
-        return modelMappers.mapToStudentRespone(savedStudent);
+        return modelMappers.mapToStudentResponse(savedStudent);
     }
 
     //Update
@@ -34,14 +34,14 @@ public class StudentService {
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
             newStudent.setId(Id);
         var savedStudent = studentRepository.save(newStudent);
-        return modelMappers.mapToStudentRespone(savedStudent);
+        return modelMappers.mapToStudentResponse(savedStudent);
     }
     public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, String studentNumber){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
             Integer Id = studentRepository.findByStudentId(studentNumber)
                     .getId();
         var savedStudent = studentRepository.save(newStudent);
-        return modelMappers.mapToStudentRespone(savedStudent);
+        return modelMappers.mapToStudentResponse(savedStudent);
     }
 
     //Retrieve

@@ -21,6 +21,7 @@ import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 
 @Component
 public class ModelMappers {
-    public Department mapToDepartment(DepartmentRequestDto departmentRequestDto){
+    public Department mapToDepartment(@NotNull DepartmentRequestDto departmentRequestDto){
         Department newDepartment = new Department();
             newDepartment.setDepartmentCode(departmentRequestDto.departmentCode());
             newDepartment.setDepartmentName(departmentRequestDto.departmentName());
@@ -42,7 +43,7 @@ public class ModelMappers {
                     )));
         return newDepartment;
     }
-    public DepartmentResponseDto mapToDepartmentResponse(Department department){
+    public DepartmentResponseDto mapToDepartmentResponse(@NotNull Department department){
         DepartmentResponseDto newDepartmentResponseDto = new DepartmentResponseDto(
                 department.getDepartmentName(),
                 department.getDepartmentCode(),
@@ -53,7 +54,7 @@ public class ModelMappers {
         );
         return newDepartmentResponseDto;
     }
-    public Course mapToCourse(CourseRequestDto courseRequestDto){
+    public Course mapToCourse(@NotNull CourseRequestDto courseRequestDto){
         Course newCourse = new Course();
             newCourse.setCourseName(courseRequestDto.courseName());
             newCourse.setCourseCode(courseRequestDto.courseName());
@@ -63,7 +64,7 @@ public class ModelMappers {
             ));
         return newCourse;
     }
-    public CourseResponseDto mapToCourseResponse(Course course){
+    public CourseResponseDto mapToCourseResponse(@NotNull Course course){
         CourseResponseDto newCourseResponseDto = new CourseResponseDto(
                 course.getCourseCode(),
                 course.getCourseName(),
@@ -71,7 +72,7 @@ public class ModelMappers {
                 course.getDepartment().getDepartmentCode());
         return newCourseResponseDto;
     }
-    public Lecture mapToLecture(LectureRequestDto lectureRequestDto){
+    public Lecture mapToLecture(@NotNull LectureRequestDto lectureRequestDto){
         Lecture newLecture = new Lecture();
             newLecture.setLecturer(new Lecturer(
                             Integer.getInteger(lectureRequestDto.lecturerId()))
@@ -85,7 +86,7 @@ public class ModelMappers {
             newLecture.setEndTime(lectureRequestDto.endTime());
         return newLecture;
     }
-    public LectureResponseDto mapToLectureResponse(Lecture lecture){
+    public LectureResponseDto mapToLectureResponse(@NotNull Lecture lecture){
         LectureResponseDto newLectureResponseDto = new LectureResponseDto(
                 lecture.getCode(),
                 lecture.getCourse().getCourseName(),
@@ -96,7 +97,7 @@ public class ModelMappers {
         );
         return newLectureResponseDto;
     }
-    public Lecturer mapToLecturer(LecturerRequestDto lecturerRequestDto){
+    public Lecturer mapToLecturer(@NotNull LecturerRequestDto lecturerRequestDto){
         Lecturer newLecturer = new Lecturer();
             newLecturer.setLectureId(lecturerRequestDto.lecturerId());
             newLecturer.setDepartment(new Department(
@@ -116,7 +117,7 @@ public class ModelMappers {
             newLecturer.setNrcNumber(lecturerRequestDto.nrcNumber());
         return newLecturer;
     }
-    public LecturerResponseDto mapToLecturerResponse(Lecturer lecturer){
+    public LecturerResponseDto mapToLecturerResponse(@NotNull Lecturer lecturer){
         LecturerResponseDto newLecturerResponseDto = new LecturerResponseDto(
                 lecturer.getNrcNumber(),
                 lecturer.getLectureId(),
@@ -134,7 +135,7 @@ public class ModelMappers {
         );
         return newLecturerResponseDto;
     }
-    public Program mapToProgram(ProgramRequestDto programRequestDto){
+    public Program mapToProgram(@NotNull ProgramRequestDto programRequestDto){
         Program newProgram = new Program();
             newProgram.setProgramCode(programRequestDto.programCode());
             newProgram.setProgramName(programRequestDto.programName());
@@ -146,7 +147,7 @@ public class ModelMappers {
         ));
         return newProgram;
     }
-    public ProgramResponseDto mapToProgramResponse(Program program){
+    public ProgramResponseDto mapToProgramResponse(@NotNull Program program){
         ProgramResponseDto newProgramResponseDto = new ProgramResponseDto(
                 program.getProgramCode(),
                 program.getProgramName(),
@@ -158,20 +159,20 @@ public class ModelMappers {
         );
         return newProgramResponseDto;
     }
-    public School mapToSchool(SchoolRequestDto schoolRequestDto){
+    public School mapToSchool(@NotNull SchoolRequestDto schoolRequestDto){
         School school = new School();
             school.setSchoolCode(schoolRequestDto.schoolCode());
             school.setSchoolName(schoolRequestDto.schoolName());
         return school;
     }
-    public SchoolResponseDto mapToSchoolResponse(School school){
+    public SchoolResponseDto mapToSchoolResponse(@NotNull School school){
         SchoolResponseDto schoolResponseDto = new SchoolResponseDto(
                 school.getSchoolCode(),
                 school.getSchoolName()
         );
         return schoolResponseDto;
     }
-    public Student mapToStudent(StudentRequestDto studentRequestDto){
+    public Student mapToStudent(@NotNull StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
             newStudent.setStudentId(studentRequestDto.studentId());
             newStudent.setFirstname(studentRequestDto.firstname());
@@ -196,7 +197,7 @@ public class ModelMappers {
             ));
         return newStudent;
     }
-    public StudentResponseDto mapToStudentRespone(Student student){
+    public StudentResponseDto mapToStudentResponse(@NotNull Student student){
         StudentResponseDto studentResponseDto = new StudentResponseDto(
                 student.getNrcNumber(),
                 student.getStudentId(),
