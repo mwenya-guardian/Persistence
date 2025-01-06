@@ -5,4 +5,9 @@ public record CourseResponseDto (
     String courseName,
     String departmentName,
     String departmentCode
-) {}
+) {
+    public CourseResponseDto( String courseCode,
+                              String courseName){
+        this(courseCode, courseName, "", "");
+    }
+}

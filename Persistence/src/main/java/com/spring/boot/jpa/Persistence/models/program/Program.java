@@ -2,6 +2,7 @@ package com.spring.boot.jpa.Persistence.models.program;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
@@ -17,17 +18,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Program {
+
     @Id
     @GeneratedValue
-    private Integer program_id;
+    private Integer programId;
     @Column(unique = true)
     private String programCode;
     @Column(nullable = false)
     private String programName;
 
-    @OneToMany(mappedBy = "program")
+//    @OneToMany(mappedBy = "program")
+//    @JsonBackReference
+//    private List<ProgramCourseList> programCourseList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ProgramCourseList",
+            joinColumns = @JoinColumn(name = "program", referencedColumnName = "programId"),
+            inverseJoinColumns = @JoinColumn(name = "course", referencedColumnName = "courseId")
+    )
     @JsonBackReference
-    private ProgramCourseList programCourseList;
+    private List<Course> programCourseList;
 
     @ManyToOne
     @JoinColumn
@@ -44,6 +55,6 @@ public class Program {
     private List<Student> students;
 
     public Program(Integer id){
-        this.program_id = id;
+        this.programId = id;
     }
 }

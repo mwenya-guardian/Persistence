@@ -21,6 +21,7 @@ import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
+import jakarta.persistence.metamodel.StaticMetamodel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -155,7 +156,10 @@ public class ModelMappers {
                 program.getSchool().getSchoolName(),
                 program.getDepartment().getDepartmentName(),
                 program.getDepartment().getDepartmentName(),
-                new ArrayList<>()
+                program.getProgramCourseList().stream()
+                        .parallel()
+                        .map(this::mapToCourseResponse)
+                        .toList()
         );
         return newProgramResponseDto;
     }
@@ -210,13 +214,13 @@ public class ModelMappers {
                 student.getPhoneNumber(),
                 student.getEmail(),
                 new java.util.Date(student.getDob().getTime()),
-                new java.util.Date(student.getEnrollmentDate().getTime()),
-                student.getSchool().getSchoolName(),
-                student.getProgram().getProgramName(),
-                student.getDepartment().getDepartmentName(),
-                student.getSchool().getSchoolCode(),
-                student.getProgram().getProgramCode(),
-                student.getDepartment().getDepartmentCode()
+                new java.util.Date(student.getEnrollmentDate().getTime())
+//                student.getSchool().getSchoolName(),
+//                student.getProgram().getProgramName(),
+//                student.getDepartment().getDepartmentName(),
+//                student.getSchool().getSchoolCode(),
+//                student.getProgram().getProgramCode(),
+//                student.getDepartment().getDepartmentCode()
 
         );
         return studentResponseDto;

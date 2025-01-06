@@ -27,7 +27,7 @@ public class Student extends EntityBaseClass {
     @Column(unique = true, updatable = false, name = "student_id")
     private String studentId;
 
-    @Generated
+    //@Generated
     private Date enrollmentDate;
 
     @ManyToOne

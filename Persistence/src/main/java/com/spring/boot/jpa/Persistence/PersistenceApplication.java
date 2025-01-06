@@ -2,6 +2,7 @@ package com.spring.boot.jpa.Persistence;
 
 import com.github.javafaker.Faker;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
+import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.EntityBaseClass;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
@@ -21,7 +22,7 @@ public class PersistenceApplication {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(StudentService studentService,
-											   StudentRepository studentRepository){
+											   StudentRepository studentRepository, ModelMappers modelMappers){
 		Faker faker = new Faker();
 		String[] nrc = new String[10], snumber = new String[10];
 		return args -> {
@@ -42,6 +43,12 @@ public class PersistenceApplication {
 				student.setNationality(faker.country().name());
 				student.setProvince(faker.nation().capitalCity());
 				student.setDistrict(faker.country().capital());
+				student.setEnrollmentDate(new Date(
+						faker.date().between(
+						new java.util.Date(),
+						new java.util.Date(2000, 01, 01)
+						).getTime())
+				);
 				var s = studentRepository.save(student);
 				if(j < nrc.length){
 					snumber[j] = s.getStudentId();
@@ -61,7 +68,7 @@ public class PersistenceApplication {
 					.stream()
 					.parallel()
 					.map(arg ->{
-						return ((EntityBaseClass)arg);
+						return ("Name: " + arg.getFirstname() + " " + arg.getLastname());
 					})
 					.forEach(System.out::println);
 			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

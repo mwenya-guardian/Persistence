@@ -21,4 +21,23 @@ public record StudentResponseDto (
         String schoolCode,
         String programCode,
         String departmentCode
-){}
+){
+    public StudentResponseDto(String nrcNumber,
+                              String studentId,
+                              String firstname,
+                              String lastname,
+                              String address,
+                              String province,
+                              String district,
+                              String nationality,
+                              String phoneNumber,
+                              String email,
+                              Date dob,
+                              Date enrollmentDate
+                              ){
+        this(nrcNumber, studentId, firstname, lastname, address, province,
+                district, nationality, phoneNumber, email, dob, enrollmentDate,
+                " ", " ", " ", " ", " ", " ");
+
+    }
+}

@@ -4,15 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
-import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
-import com.spring.boot.jpa.Persistence.models.program.ProgramCourseList;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -20,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Course {
     @Id
-    private Integer course_id;
+    private Integer courseId;
     @Column(unique = true)
     private String courseCode;
     private String courseName;
@@ -30,9 +25,9 @@ public class Course {
     @JsonBackReference
     private Department department;
 
-    @OneToMany(mappedBy = "course")
-    @JsonManagedReference
-    private ProgramCourseList programCourseList;
+//    @OneToMany(mappedBy = "course")
+//    @JsonManagedReference
+//    private List<ProgramCourseList> programCourseList;
 
     @OneToOne(mappedBy = "course")
     @JsonManagedReference
@@ -42,6 +37,6 @@ public class Course {
 //    @JoinTable(name = "Course_Assignment")
 //    private List<Lecturer> lecturer;
     public Course(Integer id){
-        this.course_id = id;
+        this.courseId = id;
     }
 }

@@ -33,7 +33,7 @@ public class CourseService {
     //Update
     public CourseResponseDto updateCourse(CourseRequestDto courseRequestDto, Integer Id){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
-            newCourse.setCourse_id(Id);
+            newCourse.setCourseId(Id);
                 var savedCourse = courseRepository.save(newCourse);
         return modelMappers.mapToCourseResponse(savedCourse);
     }
@@ -42,8 +42,8 @@ public class CourseService {
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
         Integer Id = courseRepository
                     .findByCourseCode(courseCode)
-                    .getCourse_id();
-        newCourse.setCourse_id(Id);
+                    .getCourseId();
+        newCourse.setCourseId(Id);
         var savedCourse = courseRepository.save(newCourse);
         return modelMappers.mapToCourseResponse(savedCourse);
     }

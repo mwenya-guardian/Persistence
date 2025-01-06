@@ -15,7 +15,7 @@ public interface EntityBaseClassRepository <T> {
     List<T> findAllByProvince(String province);
     List<T> findAllByDistrict(String district);
     List<T> findAllByNationality(String country);
-    List<T> findAllByDobStartDate(Date date);
-
-
+    List<T> findAllByDobAfter(Date date);
+    List<T> findAllByDobBefore(Date date);
+    List<T> findAllByDobBetween(Date startDate, Date endDate);
 }
