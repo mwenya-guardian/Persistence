@@ -55,7 +55,7 @@ public class LecturerService {
                 .orElseThrow();
     }
     public List<LecturerResponseDto> findAllLecturersWithDepartment(String departmentId){
-        return lecturerRepository.findAllByDepartment(departmentId)
+        return lecturerRepository.findAllByDepartmentId(departmentId)
                 .stream()
                 .parallel()
                 .map(modelMappers::mapToLecturerResponse)

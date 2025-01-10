@@ -13,10 +13,12 @@ import java.util.Optional;
 
 public interface LecturerRepository extends EntityBaseClassRepository<Lecturer>, JpaRepository<Lecturer, Integer> {
     Optional<Lecturer> findByNrcNumber(String nrc);
-    @Query(value = "SELECT l FROM lecturer WHERE l.department = :departmentId")
-    List<Lecturer> findAllByDepartment(String departmentId);
+
+    @Query(value = "SELECT l FROM Lecturer l WHERE l.department = :departmentId")
+    List<Lecturer> findAllByDepartmentId(String departmentId);
     List<Lecturer> findAllByDepartment(Department department);
-    @Query(value = "SELECT l FROM lecturer WHERE l.lecturerId = :id")
+
+    @Query(value = "SELECT l FROM Lecturer l WHERE l.lecturerId = :id")
     Optional<Lecturer> findByLecturerId(String id);
 
     @Modifying

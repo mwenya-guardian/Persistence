@@ -13,6 +13,7 @@ import java.util.List;
 
 public interface StudentRepository extends EntityBaseClassRepository<Student>,  JpaRepository<Student, Integer> {
     Student findByNrcNumber(String nrc);
+    @Query(value = "SELECT s FROM Student s WHERE s.studentNumber = :studentNumber")
     Student findByStudentNumber(String studentNumber);
 
     @Query(value = "SELECT s FROM Student s")
