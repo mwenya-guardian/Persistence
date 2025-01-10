@@ -22,7 +22,7 @@ public record StudentResponseDto (
         String programCode,
         String departmentCode
 ){
-    public StudentResponseDto(String nrcNumber,
+    public static StudentResponseDto withOutJoins(String nrcNumber,
                               String studentId,
                               String firstname,
                               String lastname,
@@ -35,7 +35,7 @@ public record StudentResponseDto (
                               Date dob,
                               Date enrollmentDate
                               ){
-        this(nrcNumber, studentId, firstname, lastname, address, province,
+        return new StudentResponseDto(nrcNumber, studentId, firstname, lastname, address, province,
                 district, nationality, phoneNumber, email, dob, enrollmentDate,
                 " ", " ", " ", " ", " ", " ");
 

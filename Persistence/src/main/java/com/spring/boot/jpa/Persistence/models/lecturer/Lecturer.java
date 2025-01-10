@@ -26,8 +26,8 @@ public class Lecturer extends EntityBaseClass {
     private Integer id;
     @Column(unique = true, name = "nrc_number")
     private String nrcNumber;
-    @Column(unique = true, updatable = false, name = "lecture_id")
-    private String lectureId;
+    @Column(unique = true, updatable = false, name = "lecturer_id")
+    private String lecturerId;
 
     @ManyToOne
     @JoinColumn
@@ -42,8 +42,12 @@ public class Lecturer extends EntityBaseClass {
     @JsonManagedReference
     private List<Lecture> lecture;
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    private List<Course> course;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "Course_Assignment",
+    joinColumns = @JoinColumn(name = "lecturer", referencedColumnName = "lecturer_id"),
+    inverseJoinColumns = @JoinColumn(name = "course_assigned", referencedColumnName = "course_id"),
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"course_assigned"})})
+    private List<Course> course;
 
     public Lecturer(Integer id){
         this.id = id;

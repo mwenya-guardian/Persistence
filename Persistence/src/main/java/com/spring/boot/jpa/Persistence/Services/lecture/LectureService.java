@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class LectureService {
     private LectureRepository lectureRepository;

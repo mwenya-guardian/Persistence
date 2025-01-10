@@ -17,7 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class DepartmentService {
     private DepartmentRepository departmentRepository;

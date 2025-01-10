@@ -1,19 +1,89 @@
 package com.spring.boot.jpa.Persistence.Services.lecturer;
 
+import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerRequestDto;
+import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
+import com.spring.boot.jpa.Persistence.models.department.Department;
+import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.repositories.lecturer.LecturerRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class LecturerService {
     private LecturerRepository lecturerRepository;
     private ModelMappers modelMappers;
+
+    //Create
+    public LecturerResponseDto createLecturer(LecturerRequestDto lecturerRequestDto){
+        var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
+            lecturer = lecturerRepository.save(lecturer);
+        return modelMappers.mapToLecturerResponse(lecturer);
+    }
+
+    //Retrieve
+    public List<LecturerResponseDto> getAllLecturer(){
+        return lecturerRepository.findAll()
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLecturerResponse)
+                .toList();
+    }
+    public Page<Lecturer> findAllLecturersUsingPaging(Integer pageNumber, Integer pageSize, String sort){
+        Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(sort));
+        return lecturerRepository.findAll(page);
+    }
+    public LecturerResponseDto findLecturerWithNrcNumber(String nrc){
+        return lecturerRepository.findByNrcNumber(nrc)
+                .map(modelMappers::mapToLecturerResponse)
+                .orElseThrow();
+    }
+    public LecturerResponseDto findLecturerWithLecturerId(String id){
+        return lecturerRepository.findByLecturerId(id)
+                .map(modelMappers::mapToLecturerResponse)
+                .orElseThrow();
+    }
+    public List<LecturerResponseDto> findAllLecturersWithDepartment(String departmentId){
+        return lecturerRepository.findAllByDepartment(departmentId)
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLecturerResponse)
+                .toList();
+    }
+    public List<LecturerResponseDto> findAllLecturersWithDepartmentEntity(String departmentId){
+        return lecturerRepository.findAllByDepartment(new Department(
+                Integer.getInteger(departmentId)
+                ))
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLecturerResponse)
+                .toList();
+    }
+    //Update
+    public LecturerResponseDto updateLecturer(LecturerRequestDto lecturerRequestDto, String id){
+        var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
+        var retrieved = lecturerRepository.findByLecturerId(id).orElseThrow();
+            lecturer.setId(retrieved.getId());
+            lecturer = lecturerRepository.save(lecturer);
+        return modelMappers.mapToLecturerResponse(lecturer);
+    }
+    //Delete
+    public Integer deleteLecturerWithNrc(String nrc){
+        return lecturerRepository.deleteByNrcNumber(nrc);
+    }
+    public Integer deleteLecturerWithLecturerId(String id){
+        return lecturerRepository.deleteByLecturerId(id);
+    }
+
 }

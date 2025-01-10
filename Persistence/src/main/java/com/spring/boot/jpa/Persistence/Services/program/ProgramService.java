@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class ProgramService {
     private ProgramRepository programRepository;
@@ -33,14 +32,15 @@ public class ProgramService {
     public ProgramResponseDto updateProgram(ProgramRequestDto programRequestDto){
         var newProgram = modelMappers.mapToProgram(programRequestDto);
             var programId =  programRepository.findByProgramCode(programRequestDto.programCode())
-                    .orElse(new Program());
+                    .orElseThrow();
             newProgram.setProgramId(programId.getProgramId());
         var savedProgram = programRepository.save(newProgram);
         return modelMappers.mapToProgramResponse(savedProgram);
     }
     public ProgramResponseDto updateProgram(ProgramRequestDto programRequestDto, Integer id){
         var newProgram = modelMappers.mapToProgram(programRequestDto);
-        newProgram.setProgramId(id);
+            programRepository.findById(id).orElseThrow();
+            newProgram.setProgramId(id);
         var savedProgram = programRepository.save(newProgram);
         return modelMappers.mapToProgramResponse(savedProgram);
     }
@@ -65,8 +65,8 @@ public class ProgramService {
     }
 
     //Delete
-    public void deleteProgramWithCode(String code){
-        programRepository.deleteByProgramCode(code);
+    public Integer deleteProgramWithCode(String code){
+        return programRepository.deleteByProgramCode(code);
     }
     public void deleteProgramWithId(Integer id){
         programRepository.deleteById(id);

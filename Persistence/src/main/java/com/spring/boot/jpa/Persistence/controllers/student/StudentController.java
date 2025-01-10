@@ -1,56 +1,63 @@
 package com.spring.boot.jpa.Persistence.controllers.student;
 
-import com.spring.boot.jpa.Persistence.models.student.Student;
+import com.spring.boot.jpa.Persistence.Services.student.StudentService;
+import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
+import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/students")
+@AllArgsConstructor
 public class StudentController {
     private StudentRepository studentRepository;
+    private StudentService studentService;
 
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    @GetMapping
+    public ResponseEntity<List<StudentResponseDto>> getAllStudents() {
+        return new ResponseEntity<>(studentService.findAllStudents()
+        , HttpStatus.OK);
     }
 
-    @GetMapping("/students")
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    @GetMapping("/page")
+    public ResponseEntity<List<StudentResponseDto>> getAllStudentsByPaging(
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sort
+    ){
+        sort = sort.substring(1, sort.lastIndexOf('"'));
+        return new ResponseEntity<>(
+                studentService.findAllStudentsUsingPages(pageNumber, pageSize, sort),
+                HttpStatus.OK);
+    }
+    @GetMapping("/{studentId}")
+    public ResponseEntity<StudentResponseDto> getStudentWithId(
+            @PathVariable String studentId
+    ){
+        var student = studentService.findStudentByStudentId(studentId);
+        return new ResponseEntity<>(student, HttpStatus.OK);
+    }
+    @PostMapping
+    public ResponseEntity<StudentResponseDto> createStudent(
+            @RequestBody @Valid StudentRequestDto requestDto
+    ){
+        return new ResponseEntity<>(
+                studentService.createStudent(requestDto),
+                HttpStatus.CREATED);
     }
 
-    @GetMapping("/students/form")
-    public List<Student> getAllStudentsForm(){
-        //return studentRepository.findAll();
-        var list = new ArrayList<Student>();
-        list.add(new Student());
-        return list;
+    @DeleteMapping("/{studentId}/delete")
+    public ResponseEntity<String> deleteStudent(
+            @PathVariable String studentId
+    ){
+        var affectedRows = studentService.deleteStudentsWithStudentNumber(studentId);
+            var body = affectedRows == 1? "Deleted Safely": "Error Delete Failed";
+        return new ResponseEntity<>(body, HttpStatus.ACCEPTED);
     }
-    @PostMapping("/students")
-    public ResponseEntity<Student> createStudent(@RequestBody Sdto obj){
-        var student = new Student();
-        student.setFirstname(obj.getFirstname());
-        student.setNrcNumber(obj.getNrc_number());
-        return new ResponseEntity<>(studentRepository.save(student), HttpStatus.CREATED);
-    }
-}
-
-
-@Data
-@NoArgsConstructor
-@Component
-class Sdto {
-    private String nrc_number;
-    private String student_id;
-    private String firstname;
-    private String lastname;
-    private String address;
 }

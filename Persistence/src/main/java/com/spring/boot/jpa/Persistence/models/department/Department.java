@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Department {
     @Id
+    @GeneratedValue
     private Integer id;
     @Column(name = "department_name")
     private String departmentName;

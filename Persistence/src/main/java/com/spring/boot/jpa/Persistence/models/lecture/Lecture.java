@@ -19,6 +19,7 @@ public class Lecture {
     @GeneratedValue
     private Integer lecture_id;
     private String code;
+    private Integer duration;
     private Timestamp startTime;
     private Timestamp endTime;
 

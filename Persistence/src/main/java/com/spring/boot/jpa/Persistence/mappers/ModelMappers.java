@@ -19,6 +19,7 @@ import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.models.program.Program;
+import com.spring.boot.jpa.Persistence.models.program.ProgramCourseList;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import jakarta.persistence.metamodel.StaticMetamodel;
@@ -100,7 +101,7 @@ public class ModelMappers {
     }
     public Lecturer mapToLecturer(@NotNull LecturerRequestDto lecturerRequestDto){
         Lecturer newLecturer = new Lecturer();
-            newLecturer.setLectureId(lecturerRequestDto.lecturerId());
+            newLecturer.setLecturerId(lecturerRequestDto.lecturerId());
             newLecturer.setDepartment(new Department(
                     Integer.getInteger(lecturerRequestDto.departmentId())
             ));
@@ -121,7 +122,7 @@ public class ModelMappers {
     public LecturerResponseDto mapToLecturerResponse(@NotNull Lecturer lecturer){
         LecturerResponseDto newLecturerResponseDto = new LecturerResponseDto(
                 lecturer.getNrcNumber(),
-                lecturer.getLectureId(),
+                lecturer.getLecturerId(),
                 lecturer.getFirstname(),
                 lecturer.getLastname(),
                 new Date(lecturer.getDob().getTime()),
@@ -158,6 +159,7 @@ public class ModelMappers {
                 program.getDepartment().getDepartmentName(),
                 program.getProgramCourseList().stream()
                         .parallel()
+                        .map(ProgramCourseList::getCourse)
                         .map(this::mapToCourseResponse)
                         .toList()
         );
@@ -178,7 +180,7 @@ public class ModelMappers {
     }
     public Student mapToStudent(@NotNull StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
-            newStudent.setStudentId(studentRequestDto.studentId());
+            newStudent.setStudentNumber(studentRequestDto.studentId());
             newStudent.setFirstname(studentRequestDto.firstname());
             newStudent.setLastname(studentRequestDto.lastname());
             newStudent.setDistrict(studentRequestDto.district());
@@ -204,7 +206,30 @@ public class ModelMappers {
     public StudentResponseDto mapToStudentResponse(@NotNull Student student){
         StudentResponseDto studentResponseDto = new StudentResponseDto(
                 student.getNrcNumber(),
-                student.getStudentId(),
+                student.getStudentNumber(),
+                student.getFirstname(),
+                student.getLastname(),
+                student.getAddress(),
+                student.getProvince(),
+                student.getDistrict(),
+                student.getNationality(),
+                student.getPhoneNumber(),
+                student.getEmail(),
+                new java.util.Date(student.getDob().getTime()),
+                new java.util.Date(student.getEnrollmentDate().getTime()),
+                student.getSchool().getSchoolName(),
+                student.getProgram().getProgramName(),
+                student.getDepartment().getDepartmentName(),
+                student.getSchool().getSchoolCode(),
+                student.getProgram().getProgramCode(),
+                student.getDepartment().getDepartmentCode()
+        );
+        return studentResponseDto;
+    }
+    public  StudentResponseDto mapToStudentResponseWithOutJoin(@NotNull Student student){
+        return StudentResponseDto.withOutJoins(
+                student.getNrcNumber(),
+                student.getStudentNumber(),
                 student.getFirstname(),
                 student.getLastname(),
                 student.getAddress(),
@@ -215,14 +240,6 @@ public class ModelMappers {
                 student.getEmail(),
                 new java.util.Date(student.getDob().getTime()),
                 new java.util.Date(student.getEnrollmentDate().getTime())
-//                student.getSchool().getSchoolName(),
-//                student.getProgram().getProgramName(),
-//                student.getDepartment().getDepartmentName(),
-//                student.getSchool().getSchoolCode(),
-//                student.getProgram().getProgramCode(),
-//                student.getDepartment().getDepartmentCode()
-
         );
-        return studentResponseDto;
     }
 }

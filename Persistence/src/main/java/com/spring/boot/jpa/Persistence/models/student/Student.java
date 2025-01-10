@@ -24,8 +24,8 @@ public class Student extends EntityBaseClass {
     private Integer id;
     @Column(unique = true, name = "NRC_Number", nullable = false)
     private String nrcNumber;
-    @Column(unique = true, updatable = false, name = "student_id")
-    private String studentId;
+    @Column(unique = true, name = "student_number")
+    private String studentNumber;
 
     //@Generated
     private Date enrollmentDate;

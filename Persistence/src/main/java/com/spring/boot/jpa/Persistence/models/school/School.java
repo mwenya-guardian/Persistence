@@ -17,7 +17,7 @@ public class School {
     @Id
     @GeneratedValue
     private Integer school_id;
-    @Column(name = "school_code", unique = true)
+    @Column(unique = true)
     private String schoolCode;
     @Column(unique = true)
     private String schoolName;

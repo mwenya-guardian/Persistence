@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
 public class SchoolService {
     private SchoolRepository schoolRepository;
@@ -31,9 +30,8 @@ public class SchoolService {
 
     //Update
     public SchoolResponseDto updateSchool(SchoolRequestDto schoolRequestDto, Integer id){
-        var updateSchool = new School();
-            updateSchool.setSchoolName(schoolRequestDto.schoolName());
-            //updateSchool.setSchoolCode(schoolRequestDto.schoolCode());
+        var updateSchool = modelMappers.mapToSchool(schoolRequestDto);
+            schoolRepository.findById(id).orElseThrow();
             updateSchool.setSchool_id(id);
             var updatedSchool = schoolRepository.save(updateSchool);
         return modelMappers.mapToSchoolResponse(updatedSchool);

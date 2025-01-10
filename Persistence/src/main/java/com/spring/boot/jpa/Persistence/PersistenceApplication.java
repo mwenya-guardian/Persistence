@@ -3,8 +3,13 @@ package com.spring.boot.jpa.Persistence;
 import com.github.javafaker.Faker;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
-import com.spring.boot.jpa.Persistence.models.EntityBaseClass;
+import com.spring.boot.jpa.Persistence.models.department.Department;
+import com.spring.boot.jpa.Persistence.models.program.Program;
+import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
+import com.spring.boot.jpa.Persistence.repositories.department.DepartmentRepository;
+import com.spring.boot.jpa.Persistence.repositories.program.ProgramRepository;
+import com.spring.boot.jpa.Persistence.repositories.school.SchoolRepository;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,14 +26,48 @@ public class PersistenceApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(StudentService studentService,
-											   StudentRepository studentRepository, ModelMappers modelMappers){
+	public CommandLineRunner commandLineRunner(SchoolRepository schoolRepository,
+											   DepartmentRepository departmentRepository,
+											   ProgramRepository programRepository,
+											   StudentService studentService,
+											   StudentRepository studentRepository,
+											   ModelMappers modelMappers){
 		Faker faker = new Faker();
 		String[] nrc = new String[10], snumber = new String[10];
 		return args -> {
+			School school = new School();
+				school.setSchoolCode("NS");
+				school.setSchoolName("School Of Natural Sciences");
+				school = schoolRepository.save(school);
+			School school2 =  new School();
+				school2.setSchoolCode("BS");
+				school2.setSchoolName("Business Sciences");
+				school2 = schoolRepository.save(school2);
+			Department department = new Department();
+				department.setDepartmentCode("CS");
+				department.setDepartmentName("Computer Science");
+				department.setSchool(school);
+				department = departmentRepository.save(department);
+			Department department2 = new Department();
+				department2.setDepartmentCode("A");
+				department2.setDepartmentName("Administration");
+				department2.setSchool(school2);
+				department2 = departmentRepository.save(department2);
+			Program program = new Program();
+				program.setProgramName("Software Engineering");
+				program.setProgramCode("SE");
+				program.setSchool(school);
+				program.setDepartment(department);
+				program = programRepository.save(program);
+			Program program2 = new Program();
+				program2.setProgramName("Human Resource");
+				program2.setProgramCode("HR");
+				program2.setSchool(school2);
+				program2.setDepartment(department2);
+				program2 = programRepository.save(program2);
 			for(int i = 0, j = 0; i < 500; i++) {
 				Student student = new Student();
-				student.setStudentId(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
+				student.setStudentNumber(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
 				student.setFirstname(faker.name().firstName());
 				student.setLastname(faker.name().lastName());
 				student.setDob(new Date(faker.date().birthday(17, 30).getTime()));
@@ -49,47 +88,76 @@ public class PersistenceApplication {
 						new java.util.Date(2000, 01, 01)
 						).getTime())
 				);
+				student.setProgram(i%2 == 0? program: program2);
+				student.setSchool(i%2 == 0? school: school2);
+				student.setDepartment(i%2 == 0? department:department2);
+				student.setEmail(student.getFirstname()
+						.concat(student.getLastname())
+						.concat(faker.number().randomDigitNotZero() + "")
+						.concat("gmail.com"));
 				var s = studentRepository.save(student);
 				if(j < nrc.length){
-					snumber[j] = s.getStudentId();
+					snumber[j] = s.getStudentNumber();
 					nrc[j++] = s.getNrcNumber();
 				}
 
 
 
 			}
-			studentService.setStudentRepository(studentRepository);
-			studentService.findAllStudents()
-					.stream()
-					.parallel()
-					.forEach(System.out::println);
-
-			studentRepository.findAllByFirstnameContaining("J")
-					.stream()
-					.parallel()
-					.map(arg ->{
-						return ("Name: " + arg.getFirstname() + " " + arg.getLastname());
-					})
-					.forEach(System.out::println);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			studentRepository.findAllByNationality("america")
-					.stream()
-					.parallel()
-					.forEach(System.out::println);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
-			for(String i: nrc){
-				System.out.println(
-						studentRepository.findByNrcNumber(i));
-				studentRepository.deleteByNrcNumber(i);
-
-			}
-			for(String i: snumber){
-				System.out.println(
-						studentRepository.findByStudentId(i));
-				studentRepository.deleteByStudentId(i);
-			}
-
+//			studentService.setStudentRepository(studentRepository);
+//			studentService.setModelMappers(modelMappers);
+//			studentService.findAllStudentsUsingPages()
+//					.stream()
+//					.parallel()
+//					.forEach(System.out::println);
+//
+//			studentRepository.findAllByFirstnameContaining("J")
+//					.stream()
+//					.parallel()
+//					.map(arg ->{
+//						return ("Name: " + arg.getFirstname() + " " + arg.getLastname());
+//					})
+//					.forEach(System.out::println);
+//			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//			studentRepository.findAllByNationality("america")
+//					.stream()
+//					.parallel()
+//					.forEach(System.out::println);
+//			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//			for(String i: nrc){
+//				System.out.println("nrc: " + i);
+//				System.out.println(
+//						modelMappers.mapToStudentResponse(studentRepository.findByNrcNumber(i)));
+//				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//			}
+//			for(String i: snumber){
+//				System.out.println("student number: " + i);
+//				System.out.println(
+//						modelMappers.mapToStudentResponse(studentRepository.findByStudentNumber(i)));
+//				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//			}
+//			System.out.println(studentService.findAllStudentsUsingPages().indexOf(studentService.findAllStudentsUsingPages().getLast()));
+//			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//			int count = 0;
+//			for(String i: nrc){
+//				if(count++ > 5)
+//					break;
+//				System.out.println("NRC COUNT: " + studentRepository.deleteByNrcNumber(i));
+//
+//			}
+//			for(String i: snumber){
+//				System.out.println("STUDENT-NUMBER: " + i);
+//			}
+//			System.out.println(studentService.findAllStudentsUsingPages().indexOf(studentService.findAllStudentsUsingPages().getLast()));
+//			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+//			for(String i: snumber){
+//				System.out.println("NUMBER COUNT: " + studentRepository.deleteByStudentNumber(i));
+//			}
+//			System.out.println(studentService.findAllStudentsUsingPages().indexOf(studentService.findAllStudentsUsingPages().getLast()));
+//			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		};
 	}
 

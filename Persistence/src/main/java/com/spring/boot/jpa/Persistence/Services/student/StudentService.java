@@ -6,7 +6,9 @@ import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Service
-@NoArgsConstructor
 @AllArgsConstructor
-//@RequiredArgsConstructor
 public class StudentService {
     private StudentRepository studentRepository;
     private ModelMappers modelMappers;
@@ -37,7 +37,7 @@ public class StudentService {
     }
     public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, String studentNumber){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
-            Integer Id = studentRepository.findByStudentId(studentNumber)
+            Integer Id = studentRepository.findByStudentNumber(studentNumber)
                     .getId();
         var savedStudent = studentRepository.save(newStudent);
         return modelMappers.mapToStudentResponse(savedStudent);
@@ -45,23 +45,41 @@ public class StudentService {
 
     //Retrieve
     public List<StudentResponseDto> findAllStudents(){
-        return studentRepository.findAll()
+        return studentRepository.findAllQuery()
                 .stream()
                 .parallel()
-                .map(modelMappers::mapToStudentResponse)
+                .map(modelMappers::mapToStudentResponseWithOutJoin)
                 .toList();
     }
     public StudentResponseDto findStudentByStudentId(String studentId){
-        var student = studentRepository.findByStudentId(studentId);
+        var student = studentRepository.findByStudentNumber(studentId);
         return modelMappers.mapToStudentResponse(student);
     }
     public StudentResponseDto findStudentsByNrc(String nrc){
         var student = studentRepository.findByNrcNumber(nrc);
         return modelMappers.mapToStudentResponse(student);
     }
+    public List<StudentResponseDto> findAllStudentsUsingPages(Integer pageNumber, Integer pageSize, String sort){
+        Pageable pageable;
+        if(!sort.isEmpty())
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort).ascending());
+        else
+            pageable = PageRequest.of(pageNumber, pageSize);
+        return studentRepository.findAll(pageable)
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToStudentResponse)
+                .toList();
+    }
 
     //Delete
-    public void deleteStudentByNrc(String nrc){
-        studentRepository.deleteByNrcNumber(nrc);
+    public int deleteStudentsWithStudentNumber(String number){
+        return studentRepository.deleteByStudentNumber(number);
+    }
+    public int deleteStudentByNrc(String nrc){
+        return studentRepository.deleteByNrcNumber(nrc);
+    }
+    public void deleteStudent(Student student){
+        studentRepository.delete(student);
     }
 }
