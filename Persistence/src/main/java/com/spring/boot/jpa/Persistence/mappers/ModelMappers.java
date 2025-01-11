@@ -83,14 +83,14 @@ public class ModelMappers {
                     Integer.getInteger(
                             lectureRequestDto.courseId())
             ));
-            newLecture.setCode(lectureRequestDto.code());
+            newLecture.setLectureCode(lectureRequestDto.code());
             newLecture.setStartTime(lectureRequestDto.startTime());
             newLecture.setEndTime(lectureRequestDto.endTime());
         return newLecture;
     }
     public LectureResponseDto mapToLectureResponse(@NotNull Lecture lecture){
         LectureResponseDto newLectureResponseDto = new LectureResponseDto(
-                lecture.getCode(),
+                lecture.getLectureCode(),
                 lecture.getCourse().getCourseName(),
                 lecture.getCourse().getCourseCode(),
                 lecture.getLecturer().getLastname().toUpperCase(),
@@ -172,7 +172,7 @@ public class ModelMappers {
         return school;
     }
     public SchoolResponseDto mapToSchoolResponse(@NotNull School school){
-        SchoolResponseDto schoolResponseDto = new SchoolResponseDto(
+        SchoolResponseDto schoolResponseDto = SchoolResponseDto.dtoWithNameAndCodeOnly(
                 school.getSchoolCode(),
                 school.getSchoolName()
         );

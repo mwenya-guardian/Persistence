@@ -21,7 +21,7 @@ public interface StudentRepository extends EntityBaseClassRepository<Student>,  
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM Student s where s.studentNumber = :studentNumber")
+    @Query(value = "DELETE FROM Student s WHERE s.studentNumber = :studentNumber")
     int deleteByStudentNumber(String studentNumber);
 
     @Modifying

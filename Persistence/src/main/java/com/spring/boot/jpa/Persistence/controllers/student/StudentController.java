@@ -57,7 +57,9 @@ public class StudentController {
             @PathVariable String studentId
     ){
         var affectedRows = studentService.deleteStudentsWithStudentNumber(studentId);
-            var body = affectedRows == 1? "Deleted Safely": "Error Delete Failed";
+            var body = affectedRows == 1?
+                    "{\"message\": \"Deleted Safely\"}":
+                    "{\"Error\": \"Delete Failed\"}";
         return new ResponseEntity<>(body, HttpStatus.ACCEPTED);
     }
 }

@@ -1,13 +1,17 @@
 package com.spring.boot.jpa.Persistence;
 
 import com.github.javafaker.Faker;
+import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
+import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerRequestDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.department.Department;
+import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.department.DepartmentRepository;
+import com.spring.boot.jpa.Persistence.repositories.lecturer.LecturerRepository;
 import com.spring.boot.jpa.Persistence.repositories.program.ProgramRepository;
 import com.spring.boot.jpa.Persistence.repositories.school.SchoolRepository;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
@@ -29,6 +33,7 @@ public class PersistenceApplication {
 	public CommandLineRunner commandLineRunner(SchoolRepository schoolRepository,
 											   DepartmentRepository departmentRepository,
 											   ProgramRepository programRepository,
+											   LecturerRepository lecturerRepository,
 											   StudentService studentService,
 											   StudentRepository studentRepository,
 											   ModelMappers modelMappers){
@@ -65,6 +70,11 @@ public class PersistenceApplication {
 				program2.setSchool(school2);
 				program2.setDepartment(department2);
 				program2 = programRepository.save(program2);
+			Lecturer lecturer = new Lecturer();
+				lecturer.setDepartment(department);
+				lecturer.setDepartment_head(department);
+				lecturer.setLecturerId("202177123");
+			//lecturer = lecturerRepository.save(lecturer);
 			for(int i = 0, j = 0; i < 500; i++) {
 				Student student = new Student();
 				student.setStudentNumber(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
@@ -96,6 +106,13 @@ public class PersistenceApplication {
 						.concat(faker.number().randomDigitNotZero() + "")
 						.concat("gmail.com"));
 				var s = studentRepository.save(student);
+				if(i == 499){
+					//lecturer.setEmail(s.getEmail());
+					lecturer.setDob(s.getDob());
+					lecturer.setNrcNumber(s.getNrcNumber());
+					lecturer.setFirstname(s.getFirstname());
+					lecturer.setLastname(s.getLastname());
+				}
 				if(j < nrc.length){
 					snumber[j] = s.getStudentNumber();
 					nrc[j++] = s.getNrcNumber();
@@ -158,6 +175,15 @@ public class PersistenceApplication {
 //			}
 //			System.out.println(studentService.findAllStudentsUsingPages().indexOf(studentService.findAllStudentsUsingPages().getLast()));
 //			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		lecturer = lecturerRepository.save(lecturer);
+			department2.setHOD(lecturer);
+			departmentRepository.save(department2);
+			lecturer.setLecturerId("2021873649");
+			lecturer.setId(null);
+			lecturer.setNrcNumber("648068/64/1");
+			lecturerRepository.save(lecturer);
+		department.setHOD(lecturer);
+		departmentRepository.save(department);
 		};
 	}
 

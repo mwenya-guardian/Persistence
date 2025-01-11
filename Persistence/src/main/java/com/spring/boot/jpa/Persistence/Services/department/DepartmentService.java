@@ -41,6 +41,7 @@ public class DepartmentService {
         var newDepartment = modelMappers.mapToDepartment(departmentRequestDto);
             Integer Id = departmentRepository
                         .findByDepartmentCode(departmentCode)
+                        .orElseThrow()
                         .getId();
             newDepartment.setId(Id);
                 var savedDepartment = departmentRepository.save(newDepartment);
@@ -67,12 +68,12 @@ public class DepartmentService {
     }
     
     public DepartmentResponseDto findByDepartmentCode(String code){
-        var department = departmentRepository.findByDepartmentCode(code);
+        var department = departmentRepository.findByDepartmentCode(code).orElseThrow();
         return modelMappers.mapToDepartmentResponse(department);
     }
     
     public DepartmentResponseDto findByDepartmentId(Integer Id){
-        var department = departmentRepository.findById(Id).orElse(null);
+        var department = departmentRepository.findById(Id).orElseThrow();
         return modelMappers.mapToDepartmentResponse(department);
     }
 
@@ -86,8 +87,8 @@ public class DepartmentService {
         departmentRepository.deleteById(Id);
     }
     
-    public void deleteDepartment(String code){
-        departmentRepository.deleteByDepartmentCode(code);
+    public Integer deleteDepartment(String code){
+        return departmentRepository.deleteByDepartmentCode(code);
     }
 
 }

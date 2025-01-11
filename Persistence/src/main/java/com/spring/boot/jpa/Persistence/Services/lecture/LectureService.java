@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.Services.lecture;
 
+import com.spring.boot.jpa.Persistence.dtos.lecture.LectureRequestDto;
+import com.spring.boot.jpa.Persistence.dtos.lecture.LectureResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.repositories.lecture.LectureRepository;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 @Getter
 @Setter
 @Service
@@ -15,4 +20,65 @@ import org.springframework.stereotype.Service;
 public class LectureService {
     private LectureRepository lectureRepository;
     private ModelMappers modelMappers;
+
+    //Create
+    public LectureResponseDto createLecture(LectureRequestDto lectureRequestDto){
+        var newLacture = modelMappers.mapToLecture(lectureRequestDto);
+        var savedLecture = lectureRepository.save(newLacture);
+        return modelMappers.mapToLectureResponse(savedLecture);
+    }
+
+
+    //Update
+    public LectureResponseDto updateLecture(LectureRequestDto lectureRequestDto){
+        var lecture = modelMappers.mapToLecture(lectureRequestDto);
+        var id = lectureRepository.findByLectureCode(
+                lecture.getLectureCode())
+                .orElseThrow()
+                .getLectureId();
+        lecture.setLectureId(id);
+        var updatedLecture = lectureRepository.save(lecture);
+        return modelMappers.mapToLectureResponse(updatedLecture);
+    }
+    //Retrieve
+    public List<LectureResponseDto> findAllLectures(){
+        return lectureRepository.findAll()
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLectureResponse)
+                .toList();
+    }
+    public List<LectureResponseDto> findAllLecturesWithStartTimeBetween(Timestamp start , Timestamp end){
+        return lectureRepository.findAllByStartTimeBetween(start, end)
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLectureResponse)
+                .toList();
+    }
+    //Incomplete
+    public List<LectureResponseDto> findAllLecturesWithCourse(String courseId){
+        return lectureRepository.findAllByCourseId(courseId)
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLectureResponse)
+                .toList();
+    }
+    //Incomplete
+    public List<LectureResponseDto> findAllLecturesWithLecturer(String lecturerId){
+        return lectureRepository.findAllByLecturerId(lecturerId)
+                .stream()
+                .parallel()
+                .map(modelMappers::mapToLectureResponse)
+                .toList();
+    }
+    public LectureResponseDto findLectureWithCode(String code){
+        return lectureRepository.findByLectureCode(code)
+                .map(modelMappers::mapToLectureResponse)
+                .orElseThrow();
+    }
+
+    //Delete
+    public Integer deleteLectureWithLectureCode(String lectureCode){
+        return lectureRepository.deleteByLectureCode(lectureCode);
+    }
 }

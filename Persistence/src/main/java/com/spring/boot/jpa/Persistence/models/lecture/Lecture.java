@@ -17,8 +17,8 @@ import java.sql.Timestamp;
 public class Lecture {
     @Id
     @GeneratedValue
-    private Integer lecture_id;
-    private String code;
+    private Integer lectureId;
+    private String lectureCode;
     private Integer duration;
     private Timestamp startTime;
     private Timestamp endTime;
