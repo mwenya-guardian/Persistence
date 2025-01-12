@@ -73,7 +73,7 @@ public class PersistenceApplication {
 			Lecturer lecturer = new Lecturer();
 				lecturer.setDepartment(department);
 				lecturer.setDepartment_head(department);
-				lecturer.setLecturerId("202177123");
+				lecturer.setLecturerNumber("202177123");
 			//lecturer = lecturerRepository.save(lecturer);
 			for(int i = 0, j = 0; i < 500; i++) {
 				Student student = new Student();
@@ -178,7 +178,7 @@ public class PersistenceApplication {
 		lecturer = lecturerRepository.save(lecturer);
 			department2.setHOD(lecturer);
 			departmentRepository.save(department2);
-			lecturer.setLecturerId("2021873649");
+			lecturer.setLecturerNumber("2021873649");
 			lecturer.setId(null);
 			lecturer.setNrcNumber("648068/64/1");
 			lecturerRepository.save(lecturer);

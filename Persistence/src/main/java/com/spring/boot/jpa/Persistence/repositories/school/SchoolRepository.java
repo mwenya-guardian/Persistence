@@ -15,6 +15,6 @@ public interface SchoolRepository extends JpaRepository<School, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM School s WHERE s.schoolCode = :schoolCode ")
-    void deleteBySchoolCode(String schoolCode);
+    @Query(value = "DELETE FROM School s WHERE s.schoolCode = :schoolCode")
+    Integer deleteBySchoolCode(String schoolCode);
 }

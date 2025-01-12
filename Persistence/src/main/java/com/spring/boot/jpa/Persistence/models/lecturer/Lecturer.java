@@ -27,7 +27,7 @@ public class Lecturer extends EntityBaseClass {
     @Column(unique = true, name = "nrc_number")
     private String nrcNumber;
     @Column(unique = true, updatable = false, name = "lecturer_id")
-    private String lecturerId;
+    private String lecturerNumber;
 
     @ManyToOne
     @JoinColumn

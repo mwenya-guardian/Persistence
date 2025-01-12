@@ -91,4 +91,10 @@ public class DepartmentService {
         return departmentRepository.deleteByDepartmentCode(code);
     }
 
+    public Integer getDepartmentId(String code){
+        return departmentRepository.findByDepartmentCode(code)
+                .orElseThrow()
+                .getId();
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.Services.lecture;
 
+import com.spring.boot.jpa.Persistence.Services.course.CourseService;
+import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
 import com.spring.boot.jpa.Persistence.dtos.lecture.LectureRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.lecture.LectureResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
@@ -19,6 +21,8 @@ import java.util.List;
 @AllArgsConstructor
 public class LectureService {
     private LectureRepository lectureRepository;
+    private LecturerService lecturerService;
+    private CourseService courseService;
     private ModelMappers modelMappers;
 
     //Create
@@ -55,16 +59,16 @@ public class LectureService {
                 .map(modelMappers::mapToLectureResponse)
                 .toList();
     }
-    //Incomplete
-    public List<LectureResponseDto> findAllLecturesWithCourse(String courseId){
+    public List<LectureResponseDto> findAllLecturesWithCourse(String courseCode){
+        var courseId = courseService.getCourseId(courseCode);
         return lectureRepository.findAllByCourseId(courseId)
                 .stream()
                 .parallel()
                 .map(modelMappers::mapToLectureResponse)
                 .toList();
     }
-    //Incomplete
-    public List<LectureResponseDto> findAllLecturesWithLecturer(String lecturerId){
+    public List<LectureResponseDto> findAllLecturesWithLecturer(String lecturerNumber){
+        var lecturerId = lecturerService.getLecturerId(lecturerNumber);
         return lectureRepository.findAllByLecturerId(lecturerId)
                 .stream()
                 .parallel()

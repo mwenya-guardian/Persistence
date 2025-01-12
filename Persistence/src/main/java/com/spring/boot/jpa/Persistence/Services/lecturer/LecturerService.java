@@ -50,7 +50,7 @@ public class LecturerService {
                 .orElseThrow();
     }
     public LecturerResponseDto findLecturerWithLecturerId(String id){
-        return lecturerRepository.findByLecturerId(id)
+        return lecturerRepository.findByLecturerNumber(id)
                 .map(modelMappers::mapToLecturerResponse)
                 .orElseThrow();
     }
@@ -73,7 +73,7 @@ public class LecturerService {
     //Update
     public LecturerResponseDto updateLecturer(LecturerRequestDto lecturerRequestDto, String id){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
-        var retrieved = lecturerRepository.findByLecturerId(id).orElseThrow();
+        var retrieved = lecturerRepository.findByLecturerNumber(id).orElseThrow();
             lecturer.setId(retrieved.getId());
             lecturer = lecturerRepository.save(lecturer);
         return modelMappers.mapToLecturerResponse(lecturer);
@@ -83,7 +83,13 @@ public class LecturerService {
         return lecturerRepository.deleteByNrcNumber(nrc);
     }
     public Integer deleteLecturerWithLecturerId(String id){
-        return lecturerRepository.deleteByLecturerId(id);
+        return lecturerRepository.deleteByLecturerNumber(id);
     }
 
+
+    public Integer getLecturerId(String lectureNumber){
+        return lecturerRepository.findByLecturerNumber(lectureNumber)
+                .orElseThrow()
+                .getId();
+    }
 }

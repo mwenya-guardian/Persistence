@@ -38,6 +38,20 @@ public class Course {
     @JsonManagedReference
     private List<Lecture> lecture;
 
+    public Boolean isEqual(@org.jetbrains.annotations.NotNull Course course){
+        if(this.courseCode.equals(
+                course.getCourseCode())
+        ){
+            if(this.courseName.equals(
+                    course.getCourseName())
+            ){
+                return this.department.getId()
+                        .equals(course.getDepartment().getId());
+            }
+            else return false;
+        }
+        else return false;
+    }
 //    @ManyToMany(mappedBy = "course", cascade = CascadeType.ALL)
 //    @JoinTable(name = "Course_Assignment")
 //    private List<Lecturer> lecturer;

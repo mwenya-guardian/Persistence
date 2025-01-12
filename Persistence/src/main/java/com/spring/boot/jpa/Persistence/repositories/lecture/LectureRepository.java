@@ -14,9 +14,9 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Query(value = "SELECT l FROM Lecture l WHERE l.lectureCode = :code")
     Optional<Lecture> findByLectureCode(String code);
     @Query(value = "SELECT l FROM Lecture l WHERE l.course = :courseId")
-    List<Lecture> findAllByCourseId(String courseId);
+    List<Lecture> findAllByCourseId(Integer courseId);
     @Query(value = "SELECT l FROM Lecture l WHERE l.lecturer = :lecturerId")
-    List<Lecture> findAllByLecturerId(String lecturerId);
+    List<Lecture> findAllByLecturerId(Integer lecturerId);
 
     @Query(value = "DELETE FROM Lecture l WHERE l.lectureCode = :code")
     Integer deleteByLectureCode(String code);

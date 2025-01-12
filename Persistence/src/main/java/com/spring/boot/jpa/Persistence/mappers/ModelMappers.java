@@ -61,8 +61,7 @@ public class ModelMappers {
             newCourse.setCourseName(courseRequestDto.courseName());
             newCourse.setCourseCode(courseRequestDto.courseName());
             newCourse.setDepartment(new Department(
-                    Integer.getInteger(
-                    courseRequestDto.departmentId())
+                    courseRequestDto.departmentId()
             ));
         return newCourse;
     }
@@ -101,7 +100,7 @@ public class ModelMappers {
     }
     public Lecturer mapToLecturer(@NotNull LecturerRequestDto lecturerRequestDto){
         Lecturer newLecturer = new Lecturer();
-            newLecturer.setLecturerId(lecturerRequestDto.lecturerId());
+            newLecturer.setLecturerNumber(lecturerRequestDto.lecturerId());
             newLecturer.setDepartment(new Department(
                     Integer.getInteger(lecturerRequestDto.departmentId())
             ));
@@ -122,7 +121,7 @@ public class ModelMappers {
     public LecturerResponseDto mapToLecturerResponse(@NotNull Lecturer lecturer){
         LecturerResponseDto newLecturerResponseDto = new LecturerResponseDto(
                 lecturer.getNrcNumber(),
-                lecturer.getLecturerId(),
+                lecturer.getLecturerNumber(),
                 lecturer.getFirstname(),
                 lecturer.getLastname(),
                 new Date(lecturer.getDob().getTime()),

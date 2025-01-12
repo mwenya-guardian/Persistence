@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.Services.course;
 
+import com.github.javafaker.Bool;
+import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
@@ -12,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -20,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CourseService {
     private CourseRepository courseRepository;
+    private DepartmentService departmentService;
     private ModelMappers modelMappers;
 
     //Create
@@ -37,14 +42,19 @@ public class CourseService {
         return modelMappers.mapToCourseResponse(savedCourse);
     }
     
-    public CourseResponseDto updateCourse(CourseRequestDto courseRequestDto, String courseCode){
+    public Map<CourseResponseDto, Boolean> updateCourse(CourseRequestDto courseRequestDto, String courseCode){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
         Integer Id = courseRepository
                     .findByCourseCode(courseCode)
+                    .orElseThrow()
                     .getCourseId();
         newCourse.setCourseId(Id);
         var savedCourse = courseRepository.save(newCourse);
-        return modelMappers.mapToCourseResponse(savedCourse);
+        var map = new Hashtable<CourseResponseDto, Boolean>();
+                map.put(modelMappers.mapToCourseResponse(savedCourse),
+                savedCourse.isEqual(newCourse)
+                );
+        return map;
     }
 
     //Delete
@@ -52,8 +62,8 @@ public class CourseService {
         courseRepository.deleteById(courseId);
     }
     
-    public void deleteCourse(String courseCode){
-        courseRepository.deleteByCourseCode(courseCode);
+    public Integer deleteCourse(String courseCode){
+        return courseRepository.deleteByCourseCode(courseCode);
     }
     
     public void deleteCourse(CourseRequestDto courseRequestDto){
@@ -62,9 +72,8 @@ public class CourseService {
     }
 
     //Retrieve
-    public List<CourseResponseDto> findAllCoursesByDepartment(Integer id){
-        var department = new Department();
-            department.setId(id);
+    public List<CourseResponseDto> findAllCoursesByDepartment(String departmentCode){
+        var department = departmentService.getDepartmentId(departmentCode);
         return courseRepository.findAllByDepartment(department)
                 .stream()
                 .map(modelMappers::mapToCourseResponse)
@@ -87,6 +96,16 @@ public class CourseService {
                 .map(modelMappers::mapToCourseResponse)
                 .toList();
         return responseDtos;
+    }
+    public CourseResponseDto findCourseWithCourseCode(String code){
+        return courseRepository.findByCourseCode(code)
+                .map(modelMappers::mapToCourseResponse)
+                .orElseThrow();
+    }
+    public Integer getCourseId(String code){
+        return courseRepository.findByCourseCode(code)
+                .orElseThrow()
+                .getCourseId();
     }
 
 

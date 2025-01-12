@@ -36,14 +36,13 @@ public class SchoolService {
             var updatedSchool = schoolRepository.save(updateSchool);
         return modelMappers.mapToSchoolResponse(updatedSchool);
     }
-    public SchoolResponseDto updateSchool(SchoolRequestDto schoolRequestDto) throws Exception {
+    public SchoolResponseDto updateSchool(SchoolRequestDto schoolRequestDto){
         var updateSchool = new School();
             updateSchool.setSchoolName(schoolRequestDto.schoolName());
             //updateSchool.setSchoolCode(schoolRequestDto.schoolCode());
-            var school = schoolRepository.findBySchoolCode(schoolRequestDto.schoolCode());
-                if(school.isEmpty())
-                    throw new Exception("School code is invalid");
-                var schoolId = school.orElse(new School()).getSchool_id();
+            var school = schoolRepository.findBySchoolCode(schoolRequestDto.schoolCode())
+                    .orElseThrow();
+                var schoolId = school.getSchool_id();
                 updateSchool.setSchool_id(schoolId);
                 var updatedSchool = schoolRepository.save(updateSchool);
         return modelMappers.mapToSchoolResponse(updatedSchool);
@@ -74,8 +73,8 @@ public class SchoolService {
     }
 
     //Delete
-    public void deleteSchoolWithCode(SchoolRequestDto schoolRequestDto){
-        schoolRepository.deleteBySchoolCode(schoolRequestDto.schoolCode());
+    public Integer deleteSchoolWithCode(String code){
+        return schoolRepository.deleteBySchoolCode(code);
     }
     public void deleteSchoolWithId(Integer id){
         schoolRepository.deleteById(id);
