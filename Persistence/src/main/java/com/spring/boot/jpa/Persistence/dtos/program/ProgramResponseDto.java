@@ -5,6 +5,7 @@ import com.spring.boot.jpa.Persistence.dtos.course.CourseResponseDto;
 import java.util.List;
 
 public record ProgramResponseDto(
+        Integer programId,
         String programCode,
         String programName,
         String schoolName,

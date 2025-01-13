@@ -25,6 +25,7 @@ public class Program {
     private String programCode;
     @Column(nullable = false)
     private String programName;
+    private String Duration;
 
     @ManyToOne
     @JoinColumn
@@ -40,7 +41,7 @@ public class Program {
     @JsonManagedReference
     private List<Student> students;
     
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<ProgramCourseList> programCourseList;
 

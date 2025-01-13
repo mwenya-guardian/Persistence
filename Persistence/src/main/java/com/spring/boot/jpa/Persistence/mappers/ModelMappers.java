@@ -67,6 +67,7 @@ public class ModelMappers {
     }
     public CourseResponseDto mapToCourseResponse(@NotNull Course course){
         CourseResponseDto newCourseResponseDto = new CourseResponseDto(
+                course.getCourseId(),
                 course.getCourseCode(),
                 course.getCourseName(),
                 course.getDepartment().getDepartmentName(),
@@ -136,7 +137,7 @@ public class ModelMappers {
         );
         return newLecturerResponseDto;
     }
-    public Program mapToProgram(@NotNull ProgramRequestDto programRequestDto){
+    public Program mapToProgram(@NotNull ProgramRequestDto programRequestDto, Integer id){
         Program newProgram = new Program();
             newProgram.setProgramCode(programRequestDto.programCode());
             newProgram.setProgramName(programRequestDto.programName());
@@ -146,10 +147,33 @@ public class ModelMappers {
         newProgram.setSchool(new School(
                 Integer.getInteger(programRequestDto.schoolId())
         ));
+        var courseList = new ArrayList<ProgramCourseList>();
+        var requestCourseList = programRequestDto.courseList();
+        if(requestCourseList != null && !requestCourseList.isEmpty()){
+            requestCourseList.forEach(args -> {
+                courseList.add(
+                        new ProgramCourseList(args.year(), new Program(id), new Course(args.course()))
+                );
+            });
+        }
+            newProgram.setProgramCourseList(courseList);
+        return newProgram;
+    }
+    public Program mapToNewProgram(@NotNull ProgramRequestDto programRequestDto){
+        Program newProgram = new Program();
+        newProgram.setProgramCode(programRequestDto.programCode());
+        newProgram.setProgramName(programRequestDto.programName());
+        newProgram.setDepartment(new Department(
+                Integer.getInteger(programRequestDto.departmentId())
+        ));
+        newProgram.setSchool(new School(
+                Integer.getInteger(programRequestDto.schoolId())
+        ));
         return newProgram;
     }
     public ProgramResponseDto mapToProgramResponse(@NotNull Program program){
         ProgramResponseDto newProgramResponseDto = new ProgramResponseDto(
+                program.getProgramId(),
                 program.getProgramCode(),
                 program.getProgramName(),
                 program.getSchool().getSchoolCode(),

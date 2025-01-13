@@ -48,7 +48,6 @@ public class CourseController {
                                             @PathVariable String code
     ){
         var updatedMap = courseService.updateCourse(courseRequestDto, code);
-
         return new ResponseEntity<>(updatedMap, HttpStatus.ACCEPTED);
     }
 
@@ -56,12 +55,10 @@ public class CourseController {
     public ResponseEntity<HashMap<String, String>> deleteCourseWithCode(@PathVariable String code){
         var affectedRows = courseService.deleteCourse(code);
         var message = affectedRows==1?
-                "Succefully Deleted":"Error: Delete Failed - Row Not Found";
+                "Successfully Deleted":"Error: Delete Failed";
         var map = new HashMap<String, String>();
         map.put("message", message);
         map.put("affected rows", String.valueOf(affectedRows));
-        return new ResponseEntity<>(
-                map,
-                HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(map, HttpStatus.ACCEPTED);
     }
 }

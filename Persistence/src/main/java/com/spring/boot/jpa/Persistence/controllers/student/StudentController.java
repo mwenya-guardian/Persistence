@@ -44,11 +44,21 @@ public class StudentController {
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<StudentResponseDto> createStudent(
+    public ResponseEntity<StudentResponseDto> createNewStudent(
             @RequestBody @Valid StudentRequestDto requestDto
     ){
         return new ResponseEntity<>(
                 studentService.createStudent(requestDto),
+                HttpStatus.CREATED);
+    }
+    @PutMapping("/{studentId}/update")
+    public ResponseEntity<StudentResponseDto> updateStudent(
+            @RequestBody StudentRequestDto studentRequestDto,
+            @PathVariable String studentId
+    ){
+
+        return new ResponseEntity<>(
+                studentService.updateStudent(studentRequestDto, studentId),
                 HttpStatus.CREATED);
     }
 

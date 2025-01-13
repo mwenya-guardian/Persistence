@@ -7,5 +7,5 @@ public record ProgramRequestDto(
       String programName,
       String schoolId,
       String departmentId,
-      List<String> programCourseList
+      List<ProgramCourseListRequestDto> courseList
 ) {}

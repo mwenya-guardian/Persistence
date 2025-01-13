@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentRepository extends EntityBaseClassRepository<Student>,  JpaRepository<Student, Integer> {
-    Student findByNrcNumber(String nrc);
+    Optional<Student> findByNrcNumber(String nrc);
+    Optional<Student> findByStudentNumber(String studentNumber);
+
     @Query(value = "SELECT s FROM Student s WHERE s.studentNumber = :studentNumber")
-    Student findByStudentNumber(String studentNumber);
+    Optional<Student> findByStudentNumberQuery(String studentNumber);
 
     @Query(value = "SELECT s FROM Student s")
     List<Student> findAllQuery();

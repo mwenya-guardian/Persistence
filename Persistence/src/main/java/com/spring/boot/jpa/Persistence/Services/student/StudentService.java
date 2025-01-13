@@ -37,8 +37,10 @@ public class StudentService {
     }
     public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, String studentNumber){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
-            Integer Id = studentRepository.findByStudentNumber(studentNumber)
+            Integer Id = studentRepository.findByStudentNumberQuery(studentNumber)
+                    .orElseThrow()
                     .getId();
+            newStudent.setId(Id);
         var savedStudent = studentRepository.save(newStudent);
         return modelMappers.mapToStudentResponse(savedStudent);
     }
@@ -52,11 +54,13 @@ public class StudentService {
                 .toList();
     }
     public StudentResponseDto findStudentByStudentId(String studentId){
-        var student = studentRepository.findByStudentNumber(studentId);
+        var student = studentRepository.findByStudentNumber(studentId)
+                .orElse(new Student());
         return modelMappers.mapToStudentResponse(student);
     }
     public StudentResponseDto findStudentsByNrc(String nrc){
-        var student = studentRepository.findByNrcNumber(nrc);
+        var student = studentRepository.findByNrcNumber(nrc)
+                .orElse(new Student());
         return modelMappers.mapToStudentResponse(student);
     }
     public List<StudentResponseDto> findAllStudentsUsingPages(Integer pageNumber, Integer pageSize, String sort){
