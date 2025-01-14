@@ -33,16 +33,19 @@ public class LecturerService {
     }
 
     //Retrieve
-    public List<LecturerResponseDto> getAllLecturer(){
+    public List<LecturerResponseDto> findAllLecturer(){
         return lecturerRepository.findAll()
                 .stream()
                 .parallel()
                 .map(modelMappers::mapToLecturerResponse)
                 .toList();
     }
-    public Page<Lecturer> findAllLecturersUsingPaging(Integer pageNumber, Integer pageSize, String sort){
+    public List<LecturerResponseDto> findAllLecturersUsingPaging(Integer pageNumber, Integer pageSize, String sort){
         Pageable page = PageRequest.of(pageNumber, pageSize, Sort.by(sort));
-        return lecturerRepository.findAll(page);
+        return lecturerRepository.findAll(page)
+                .stream()
+                .map(modelMappers::mapToLecturerResponse)
+                .toList();
     }
     public LecturerResponseDto findLecturerWithNrcNumber(String nrc){
         return lecturerRepository.findByNrcNumber(nrc)
