@@ -5,12 +5,21 @@ import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.*;
 import lombok.*;
+import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
+import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -20,6 +29,8 @@ import java.util.List;
 public class StudentService {
     private StudentRepository studentRepository;
     private ModelMappers modelMappers;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //Create
     public StudentResponseDto createStudent(StudentRequestDto studentRequestDto){
@@ -71,9 +82,33 @@ public class StudentService {
             pageable = PageRequest.of(pageNumber, pageSize);
         return studentRepository.findAll(pageable)
                 .stream()
-                .parallel()
                 .map(modelMappers::mapToStudentResponse)
                 .toList();
+    }
+    //Custom
+//    public List<Object[]> findAllStudentsWithCustomFields(String... args){
+//        StringBuilder queryString = new StringBuilder("SELECT ");
+//          for(int i = 0, length = args.length; i < length; i++){
+//              queryString.append(args[i]);
+//              if(i + 1 < length)
+//                  queryString.append(", ");
+//          }
+//            queryString.append(" FROM Student");
+//        Query query = entityManager.createQuery(queryString.toString());
+//        return query.getResultList();
+//    }
+    public List<Object[]> findAllStudentsWithCustomFieldsSafe(String... args){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Student> studentRoot = criteriaQuery.from(Student.class);
+            List<Selection<?>> columns = new ArrayList<>();
+            Arrays.stream(args)
+                    .forEach(arg ->{
+                        final String column = arg +"";
+                        columns.add(studentRoot.get(column));
+                    });
+            criteriaQuery.multiselect(columns);
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
     //Delete

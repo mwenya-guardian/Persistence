@@ -22,6 +22,12 @@ public interface StudentRepository extends EntityBaseClassRepository<Student>,  
     @Query(value = "SELECT s FROM Student s")
     List<Student> findAllQuery();
 
+//    //Testing
+//    @Query(value = "SELECT :args FROM Student s WHERE s.studentNumber = :id")
+//    Student findStudentWithCustomFields(String id, String... args);
+//    @Query(value = "SELECT ...:args FROM Student")
+//    List<Student> findAllStudentsWithCustomFields(String... args);
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM Student s WHERE s.studentNumber = :studentNumber")

@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.repositories;
 
+import org.springframework.data.jpa.repository.Query;
+
 import java.sql.Date;
 import java.util.List;
 
