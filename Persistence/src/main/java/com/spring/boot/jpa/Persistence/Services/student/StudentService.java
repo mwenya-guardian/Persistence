@@ -1,5 +1,6 @@
 package com.spring.boot.jpa.Persistence.Services.student;
 
+import com.spring.boot.jpa.Persistence.Services.school.StudentNumberGenerator;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
 import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
@@ -28,13 +30,18 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentService {
     private StudentRepository studentRepository;
+    private StudentNumberGenerator studentNumberGenerator;
     private ModelMappers modelMappers;
     @PersistenceContext
     private EntityManager entityManager;
 
     //Create
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public StudentResponseDto createStudent(StudentRequestDto studentRequestDto){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
+            newStudent.setStudentNumber(
+                    studentNumberGenerator.newStudentNUmberGenerate()
+            );
         var savedStudent = studentRepository.save(newStudent);
         return modelMappers.mapToStudentResponse(savedStudent);
     }
@@ -85,18 +92,6 @@ public class StudentService {
                 .map(modelMappers::mapToStudentResponse)
                 .toList();
     }
-    //Custom
-//    public List<Object[]> findAllStudentsWithCustomFields(String... args){
-//        StringBuilder queryString = new StringBuilder("SELECT ");
-//          for(int i = 0, length = args.length; i < length; i++){
-//              queryString.append(args[i]);
-//              if(i + 1 < length)
-//                  queryString.append(", ");
-//          }
-//            queryString.append(" FROM Student");
-//        Query query = entityManager.createQuery(queryString.toString());
-//        return query.getResultList();
-//    }
     public List<Object[]> findAllStudentsWithCustomFieldsSafe(String... args){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
@@ -110,6 +105,20 @@ public class StudentService {
             criteriaQuery.multiselect(columns);
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
+    public List<Object[]> findStudentWithCustomFieldsSafe(String id, String... args){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Student> studentRoot = criteriaQuery.from(Student.class);
+        List<Selection<?>> columns = new ArrayList<>();
+        Arrays.stream(args)
+                .forEach(arg ->{
+                    final String column = String.valueOf(arg);
+                    columns.add(studentRoot.get(column));
+                });
+        Predicate studentNumberEqualTo = criteriaBuilder.equal(studentRoot.get("studentNumber"), id);
+        criteriaQuery.multiselect(columns).where(studentNumberEqualTo);
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
 
     //Delete
     public int deleteStudentsWithStudentNumber(String number){
@@ -121,4 +130,17 @@ public class StudentService {
     public void deleteStudent(Student student){
         studentRepository.delete(student);
     }
+
+    //Custom
+    //    public List<Object[]> findAllStudentsWithCustomFields(String... args){
+    //        StringBuilder queryString = new StringBuilder("SELECT ");
+    //          for(int i = 0, length = args.length; i < length; i++){
+    //              queryString.append(args[i]);
+    //              if(i + 1 < length)
+    //                  queryString.append(", ");
+    //          }
+    //            queryString.append(" FROM Student");
+    //        Query query = entityManager.createQuery(queryString.toString());
+    //        return query.getResultList();
+    //    }
 }

@@ -203,7 +203,6 @@ public class ModelMappers {
     }
     public Student mapToStudent(@NotNull StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
-            newStudent.setStudentNumber(studentRequestDto.studentId());
             newStudent.setFirstname(studentRequestDto.firstname());
             newStudent.setLastname(studentRequestDto.lastname());
             newStudent.setDistrict(studentRequestDto.district());

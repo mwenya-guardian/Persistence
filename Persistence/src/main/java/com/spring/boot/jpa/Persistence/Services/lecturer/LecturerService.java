@@ -5,7 +5,11 @@ import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
+import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.lecturer.LecturerRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -23,6 +29,8 @@ import java.util.List;
 @AllArgsConstructor
 public class LecturerService {
     private LecturerRepository lecturerRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
     private ModelMappers modelMappers;
 
     //Create
@@ -73,6 +81,36 @@ public class LecturerService {
                 .map(modelMappers::mapToLecturerResponse)
                 .toList();
     }
+    //Custom
+    public List<Object[]> findAllLecturersWithCustomFieldsSafe(String... args){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Lecturer> lecturerRoot = criteriaQuery.from(Lecturer.class);
+        List<Selection<?>> columns = new ArrayList<>();
+        Arrays.stream(args)
+                .forEach(arg ->{
+                    final String column = arg +"";
+                    columns.add(lecturerRoot.get(column));
+                });
+        criteriaQuery.multiselect(columns);
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+    public List<Object[]> findLecturerWithCustomFieldsSafe(String id, String... args){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Lecturer> lecturerRoot = criteriaQuery.from(Lecturer.class);
+        List<Selection<?>> columns = new ArrayList<>();
+        Arrays.stream(args)
+                .forEach(arg ->{
+                    final String column = String.valueOf(arg);
+                    columns.add(lecturerRoot.get(column));
+                });
+        Predicate studentNumberEqualTo = criteriaBuilder.equal(lecturerRoot.get("lecturerNumber"), id);
+        criteriaQuery.multiselect(columns).where(studentNumberEqualTo);
+        return entityManager.createQuery(criteriaQuery).getResultList();
+    }
+
+
     //Update
     public LecturerResponseDto updateLecturer(LecturerRequestDto lecturerRequestDto, String id){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);

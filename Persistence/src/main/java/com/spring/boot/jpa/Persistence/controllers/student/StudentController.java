@@ -35,6 +35,23 @@ public class StudentController {
                 studentService.findAllStudentsUsingPages(pageNumber, pageSize, sort),
                 HttpStatus.OK);
     }
+    @GetMapping("/columns")
+    public ResponseEntity<List<Object[]>> getAllStudentsWithColumns(
+            @RequestParam String ...columns
+    ){
+        return new ResponseEntity<>(
+                studentService.findAllStudentsWithCustomFieldsSafe(columns),
+                HttpStatus.OK);
+    }
+    @GetMapping("/{studentId}/columns")
+    public ResponseEntity<List<Object[]>> getStudentsWithColumns(
+            @PathVariable String studentId,
+            @RequestParam String ...columns
+    ){
+        return new ResponseEntity<>(
+                studentService.findStudentWithCustomFieldsSafe(studentId, columns),
+                HttpStatus.OK);
+    }
     @GetMapping("/{studentId}")
     public ResponseEntity<StudentResponseDto> getStudentWithId(
             @PathVariable String studentId

@@ -10,9 +10,6 @@ public record StudentRequestDto (
         String nrcNumber,
         @NotNull
         @NotEmpty
-        String studentId,
-        @NotNull
-        @NotEmpty
         String firstname,
         @NotNull
         @NotEmpty
