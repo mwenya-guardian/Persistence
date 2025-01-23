@@ -26,11 +26,11 @@ public class School {
     @JsonManagedReference
     private List<Student> students;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Department> departments;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Program> programs;
 

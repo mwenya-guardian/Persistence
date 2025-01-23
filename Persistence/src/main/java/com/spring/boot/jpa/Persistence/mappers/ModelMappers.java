@@ -22,7 +22,6 @@ import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.program.ProgramCourseList;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import com.spring.boot.jpa.Persistence.models.student.Student;
-import jakarta.persistence.metamodel.StaticMetamodel;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -35,22 +34,20 @@ public class ModelMappers {
         Department newDepartment = new Department();
             newDepartment.setDepartmentCode(departmentRequestDto.departmentCode());
             newDepartment.setDepartmentName(departmentRequestDto.departmentName());
-            newDepartment.setHOD(new Lecturer(
-                    Integer.getInteger(
-                            departmentRequestDto.lecturerId()
-                    )));
-            newDepartment.setSchool(new School(
-                    Integer.getInteger(
-                            departmentRequestDto.schoolId()
-                    )));
+//            newDepartment.setHOD(new Lecturer(
+//                    Integer.getInteger(
+//                            departmentRequestDto.lecturerNumber()
+//                    )));
+//            newDepartment.setSchool(new School(departmentRequestDto.schoolId()
+//                    ));
         return newDepartment;
     }
     public DepartmentResponseDto mapToDepartmentResponse(@NotNull Department department){
         DepartmentResponseDto newDepartmentResponseDto = new DepartmentResponseDto(
                 department.getDepartmentName(),
                 department.getDepartmentCode(),
-                department.getHOD().getFirstname().toUpperCase().charAt(0)
-                        +" "+ department.getHOD().getLastname().toUpperCase(),
+                department.getHod() != null? department.getHod().getFirstname().toUpperCase().charAt(0)
+                        +" "+ department.getHod().getLastname().toUpperCase(): null,
                 department.getSchool().getSchoolName(),
                 department.getSchool().getSchoolCode()
         );
@@ -101,9 +98,8 @@ public class ModelMappers {
     }
     public Lecturer mapToLecturer(@NotNull LecturerRequestDto lecturerRequestDto){
         Lecturer newLecturer = new Lecturer();
-            newLecturer.setLecturerNumber(lecturerRequestDto.lecturerId());
             newLecturer.setDepartment(new Department(
-                    Integer.getInteger(lecturerRequestDto.departmentId())
+                  lecturerRequestDto.departmentId()
             ));
             newLecturer.setFirstname(lecturerRequestDto.firstname());
             newLecturer.setLastname(lecturerRequestDto.lastname());
@@ -194,10 +190,19 @@ public class ModelMappers {
             school.setSchoolName(schoolRequestDto.schoolName());
         return school;
     }
-    public SchoolResponseDto mapToSchoolResponse(@NotNull School school){
+    public SchoolResponseDto mapToSchoolResponseWithOutJoins(@NotNull School school){
         SchoolResponseDto schoolResponseDto = SchoolResponseDto.dtoWithNameAndCodeOnly(
                 school.getSchoolCode(),
                 school.getSchoolName()
+        );
+        return schoolResponseDto;
+    }
+    public SchoolResponseDto mapToSchoolResponse(@NotNull School school){
+        SchoolResponseDto schoolResponseDto = new SchoolResponseDto(
+                school.getSchoolCode(),
+                school.getSchoolName(),
+                school.getDepartments().stream().map(this::mapToDepartmentResponse).toList(),
+                school.getPrograms().stream().map(this::mapToProgramResponse).toList()
         );
         return schoolResponseDto;
     }
@@ -214,15 +219,27 @@ public class ModelMappers {
             newStudent.setEmail(studentRequestDto.email());
             newStudent.setAddress(studentRequestDto.address());
             newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
-            newStudent.setSchool(new School(
-                    Integer.getInteger(studentRequestDto.schoolId())
-            ));
-            newStudent.setDepartment(new Department(
-                    Integer.getInteger(studentRequestDto.schoolId())
-            ));
-            newStudent.setSchool(new School(
-                    Integer.getInteger(studentRequestDto.departmentId())
-            ));
+            newStudent.setSchool(new School(studentRequestDto.schoolId()));
+            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
+            newStudent.setProgram(new Program(studentRequestDto.programId()));
+        return newStudent;
+    }
+    public Student mapToNewStudent(@NotNull StudentRequestDto studentRequestDto){
+        Student newStudent = new Student();
+        newStudent.setFirstname(studentRequestDto.firstname());
+        newStudent.setLastname(studentRequestDto.lastname());
+        newStudent.setDistrict(studentRequestDto.district());
+        newStudent.setProvince(studentRequestDto.province());
+        newStudent.setNationality(studentRequestDto.nationality());
+        newStudent.setDob(new Date(studentRequestDto.dob().getTime()));
+        newStudent.setNrcNumber(studentRequestDto.nrcNumber());
+        newStudent.setPhoneNumber(studentRequestDto.phoneNumber());
+        newStudent.setEmail(studentRequestDto.email());
+        newStudent.setAddress(studentRequestDto.address());
+        newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
+//        newStudent.setSchool(new School(studentRequestDto.schoolId()));
+//        newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
+//        newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;
     }
     public StudentResponseDto mapToStudentResponse(@NotNull Student student){
@@ -237,8 +254,8 @@ public class ModelMappers {
                 student.getNationality(),
                 student.getPhoneNumber(),
                 student.getEmail(),
-                new java.util.Date(student.getDob().getTime()),
-                new java.util.Date(student.getEnrollmentDate().getTime()),
+                student.getDob() != null? new java.util.Date(student.getDob().getTime()): null,
+                student.getEnrollmentDate() != null? new java.util.Date(student.getEnrollmentDate().getTime()): null,
                 student.getSchool().getSchoolName(),
                 student.getProgram().getProgramName(),
                 student.getDepartment().getDepartmentName(),
@@ -260,8 +277,8 @@ public class ModelMappers {
                 student.getNationality(),
                 student.getPhoneNumber(),
                 student.getEmail(),
-                new java.util.Date(student.getDob().getTime()),
-                new java.util.Date(student.getEnrollmentDate().getTime())
+                student.getDob() != null? new java.util.Date(student.getDob().getTime()): null,
+                student.getEnrollmentDate() != null? new java.util.Date(student.getEnrollmentDate().getTime()): null
         );
     }
 }

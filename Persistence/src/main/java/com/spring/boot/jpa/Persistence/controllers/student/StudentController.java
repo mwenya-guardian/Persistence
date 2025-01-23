@@ -3,7 +3,6 @@ package com.spring.boot.jpa.Persistence.controllers.student;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
-import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,6 +34,13 @@ public class StudentController {
                 studentService.findAllStudentsUsingPages(pageNumber, pageSize, sort),
                 HttpStatus.OK);
     }
+    @GetMapping("/{studentId}")
+    public ResponseEntity<StudentResponseDto> getStudentWithId(
+            @PathVariable String studentId
+    ){
+        var student = studentService.findStudentByStudentNumber(studentId);
+        return new ResponseEntity<>(student, HttpStatus.OK);
+    }
     @GetMapping("/columns")
     public ResponseEntity<List<Object[]>> getAllStudentsWithColumns(
             @RequestParam String ...columns
@@ -44,20 +50,22 @@ public class StudentController {
                 HttpStatus.OK);
     }
     @GetMapping("/{studentId}/columns")
-    public ResponseEntity<List<Object[]>> getStudentsWithColumns(
+    public ResponseEntity<Object[]> getStudentsWithColumns(
             @PathVariable String studentId,
-            @RequestParam String ...columns
+            @RequestParam String[] columns
     ){
         return new ResponseEntity<>(
                 studentService.findStudentWithCustomFieldsSafe(studentId, columns),
                 HttpStatus.OK);
     }
-    @GetMapping("/{studentId}")
-    public ResponseEntity<StudentResponseDto> getStudentWithId(
-            @PathVariable String studentId
-    ){
-        var student = studentService.findStudentByStudentId(studentId);
-        return new ResponseEntity<>(student, HttpStatus.OK);
+    @GetMapping("/field")
+    public ResponseEntity<List<StudentResponseDto>> getStudentsWithFields(
+            @RequestParam("name") String[] columnName,
+            @RequestParam("value") String[] columnValue
+    ) throws Exception{
+        return new ResponseEntity<>(
+                studentService.findAllStudentsWithFieldValue(columnName, columnValue),
+                HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity<StudentResponseDto> createNewStudent(
@@ -86,6 +94,6 @@ public class StudentController {
             var body = affectedRows == 1?
                     "{\"message\": \"Deleted Safely\"}":
                     "{\"Error\": \"Delete Failed\"}";
-        return new ResponseEntity<>(body, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(body, affectedRows == 1?HttpStatus.ACCEPTED:HttpStatus.NOT_MODIFIED);
     }
 }

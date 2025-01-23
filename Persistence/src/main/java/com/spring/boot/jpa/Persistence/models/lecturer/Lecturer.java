@@ -34,9 +34,9 @@ public class Lecturer extends EntityBaseClass {
     @JsonBackReference
     private Department department;
 
-    @OneToOne(mappedBy = "HOD")
+    @OneToOne(mappedBy = "hod")
     @JsonManagedReference
-    private Department department_head;
+    private Department departmentHead;
 
     @OneToMany(mappedBy = "lecturer")
     @JsonManagedReference

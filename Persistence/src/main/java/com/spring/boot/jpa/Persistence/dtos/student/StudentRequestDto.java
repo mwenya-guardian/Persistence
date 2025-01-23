@@ -1,31 +1,39 @@
 package com.spring.boot.jpa.Persistence.dtos.student;
 
 import jakarta.validation.constraints.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
 public record StudentRequestDto (
         @NotNull
         @NotEmpty
+        @Length(min = 11, max = 12)
         String nrcNumber,
         @NotNull
         @NotEmpty
+        @Length(min = 1, max = 255)
         String firstname,
         @NotNull
         @NotEmpty
+        @Length(min = 1, max = 255)
         String lastname,
         @NotNull
         @NotEmpty
+        @Length(min = 1, max = 255)
         String address,
         @NotNull
         @NotEmpty
         String province,
+        @Length(min = 1, max = 255)
         @NotNull
         @NotEmpty
         String district,
+        @Length(min = 1, max = 255)
         @NotNull
         @NotEmpty
         String nationality,
+        @Length(min = 1, max = 255)
         @NotNull
         @NotEmpty
         String phoneNumber,
@@ -38,7 +46,13 @@ public record StudentRequestDto (
         Date dob,
         @FutureOrPresent
         Date enrollmentDate,
-        String schoolId,
-        String programId,
-        String departmentId
+        @NotNull
+        @Positive
+        Integer schoolId,
+        @NotNull
+        @Positive
+        Integer programId,
+        @NotNull
+        @Positive
+        Integer departmentId
 ){}

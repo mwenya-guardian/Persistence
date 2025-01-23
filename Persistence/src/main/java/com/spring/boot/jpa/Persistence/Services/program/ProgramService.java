@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -89,6 +90,9 @@ public class ProgramService {
     public ProgramResponseDto findProgramWithCode(String code){
         var program = programRepository.findByProgramCode(code);
         return modelMappers.mapToProgramResponse(program.orElse(new Program()));
+    }
+    public Program findByProgramId(Integer id){
+        return programRepository.findById(id).orElseThrow();
     }
 
     //Delete

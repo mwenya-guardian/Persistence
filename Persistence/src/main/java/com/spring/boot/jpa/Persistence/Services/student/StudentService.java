@@ -1,20 +1,18 @@
 package com.spring.boot.jpa.Persistence.Services.student;
 
-import com.spring.boot.jpa.Persistence.Services.school.StudentNumberGenerator;
+import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
+import com.spring.boot.jpa.Persistence.Services.program.ProgramService;
+import com.spring.boot.jpa.Persistence.Services.school.SchoolService;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
-import org.hibernate.jpa.boot.spi.EntityManagerFactoryBuilder;
-import org.springframework.boot.autoconfigure.orm.jpa.EntityManagerFactoryBuilderCustomizer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +28,9 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentService {
     private StudentRepository studentRepository;
+    private SchoolService schoolService;
+    private ProgramService programService;
+    private DepartmentService departmentService;
     private StudentNumberGenerator studentNumberGenerator;
     private ModelMappers modelMappers;
     @PersistenceContext
@@ -38,11 +39,20 @@ public class StudentService {
     //Create
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public StudentResponseDto createStudent(StudentRequestDto studentRequestDto){
-        var newStudent = modelMappers.mapToStudent(studentRequestDto);
+        var newStudent = modelMappers.mapToNewStudent(studentRequestDto);
             newStudent.setStudentNumber(
                     studentNumberGenerator.newStudentNUmberGenerate()
             );
-        var savedStudent = studentRepository.save(newStudent);
+            var school = schoolService.findBySchoolId(studentRequestDto.schoolId());
+            var program = programService.findByProgramId(studentRequestDto.programId());
+            var department = departmentService.findByDepartmentId(studentRequestDto.departmentId());
+                newStudent.setProgram(program);
+                newStudent.setSchool(school);
+                newStudent.setDepartment(department);
+        studentRepository.saveAndFlush(newStudent);
+        var savedStudent = studentRepository.findByStudentNumberQuery(newStudent.getStudentNumber())
+                .orElseThrow();
+
         return modelMappers.mapToStudentResponse(savedStudent);
     }
 
@@ -71,7 +81,7 @@ public class StudentService {
                 .map(modelMappers::mapToStudentResponseWithOutJoin)
                 .toList();
     }
-    public StudentResponseDto findStudentByStudentId(String studentId){
+    public StudentResponseDto findStudentByStudentNumber(String studentId){
         var student = studentRepository.findByStudentNumber(studentId)
                 .orElse(new Student());
         return modelMappers.mapToStudentResponse(student);
@@ -105,7 +115,7 @@ public class StudentService {
             criteriaQuery.multiselect(columns);
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
-    public List<Object[]> findStudentWithCustomFieldsSafe(String id, String... args){
+    public Object[] findStudentWithCustomFieldsSafe(String id, String... args){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
         Root<Student> studentRoot = criteriaQuery.from(Student.class);
@@ -117,7 +127,23 @@ public class StudentService {
                 });
         Predicate studentNumberEqualTo = criteriaBuilder.equal(studentRoot.get("studentNumber"), id);
         criteriaQuery.multiselect(columns).where(studentNumberEqualTo);
-        return entityManager.createQuery(criteriaQuery).getResultList();
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+    public List<StudentResponseDto> findAllStudentsWithFieldValue(String[] columnName, String[] columnValue) throws Exception {
+        if(columnValue.length != columnName.length)
+            throw new Exception("Different array lengths");
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+        Root<Student> studentRoot = criteriaQuery.from(Student.class);
+        Predicate[] columns = new Predicate[columnName.length];
+        for(int index = 0, length = columnName.length; index < length; index++){
+            columns[index] = criteriaBuilder.like(studentRoot.get(columnName[index]), "%" +columnValue[index] + "%");
+        }
+        criteriaQuery.select(studentRoot).where(criteriaBuilder.and(columns));
+        return entityManager.createQuery(criteriaQuery).getResultList()
+                .stream()
+                .map(modelMappers::mapToStudentResponse)
+                .toList();
     }
 
     //Delete
@@ -130,6 +156,10 @@ public class StudentService {
     public void deleteStudent(Student student){
         studentRepository.delete(student);
     }
+
+
+
+
 
     //Custom
     //    public List<Object[]> findAllStudentsWithCustomFields(String... args){

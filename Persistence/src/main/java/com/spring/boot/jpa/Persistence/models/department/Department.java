@@ -28,7 +28,7 @@ public class Department {
     @OneToOne
     @JoinColumn(name = "hod_id", unique = true)
     @JsonBackReference
-    private Lecturer HOD;
+    private Lecturer hod;
 
     @ManyToOne
     @JoinColumn

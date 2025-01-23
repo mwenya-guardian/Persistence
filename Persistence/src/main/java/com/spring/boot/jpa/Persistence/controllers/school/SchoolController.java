@@ -21,6 +21,16 @@ public class SchoolController {
     public ResponseEntity<List<SchoolResponseDto>> getAllSchools(){
         return new ResponseEntity<>(schoolService.findAllSchools(), HttpStatus.OK);
     }
+    @GetMapping("/page")
+    public ResponseEntity<List<SchoolResponseDto>> getAllSchoolsOnPages(
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sort){
+        return new ResponseEntity<>(
+                schoolService.findAllSchoolsUsingPages(pageNumber, pageSize, sort),
+                HttpStatus.OK
+        );
+    }
     @GetMapping("/name")
     public ResponseEntity<List<SchoolResponseDto>> getAllSchoolSWithName(@RequestParam String name){
         return new ResponseEntity<>(

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SchoolRepository extends JpaRepository<School, Integer> {
+    @Query(value = "SELECT s FROM School s")
+    List<School> findAllQuery();
+    @Query(value = "SELECT s FROM School s WHERE s.schoolCode = :code")
     Optional<School> findBySchoolCode(String code);
     List<School> findAllBySchoolNameLike(String name);
 

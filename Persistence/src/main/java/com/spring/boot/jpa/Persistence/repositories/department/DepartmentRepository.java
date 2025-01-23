@@ -10,13 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DepartmentRepository extends JpaRepository<Department, Integer> {
-
+    List<Department> findAllByDepartmentNameContaining(String Name);
+    Optional<Department> findByDepartmentCode(String code);
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM Department d WHERE d.departmentCode = :code")
-    public Integer deleteByDepartmentCode(String code);
+    Integer deleteByDepartmentCodeQuery(String code);
 
     @Query(value = "SELECT d FROM Department d WHERE d.departmentCode = :code")
-    public Optional<Department> findByDepartmentCode(String code);
-    public List<Department> findAllByDepartmentNameContaining(String Name);
+    Optional<Department> findByDepartmentCodeQuery(String code);
+
 }

@@ -1,4 +1,4 @@
-package com.spring.boot.jpa.Persistence.Services.school;
+package com.spring.boot.jpa.Persistence.Services.student;
 
 import com.spring.boot.jpa.Persistence.models.student.StudentNumberTable;
 import com.spring.boot.jpa.Persistence.repositories.student.StudentNumberTableRepository;
@@ -19,7 +19,7 @@ public class StudentNumberGenerator {
         String studentNumber;
         var studentNumberTable = studentNumberTableRepository.findById(0)
                 .orElse(new StudentNumberTable());
-            if(studentNumberTable.getYear().isEmpty()){
+            if(studentNumberTable.getYear() == null){
                 studentNumberTable.setId(0);
                 studentNumberTable.setYear(year);
                 studentNumberTable.setNumber((long)1);

@@ -1,16 +1,16 @@
 package com.spring.boot.jpa.Persistence.Services.department;
 
+import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
+import com.spring.boot.jpa.Persistence.Services.school.SchoolService;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
+import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.repositories.department.DepartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
@@ -21,10 +21,19 @@ import java.util.List;
 public class DepartmentService {
     private DepartmentRepository departmentRepository;
     private ModelMappers modelMappers;
+    //Inter-Service
+    private LecturerService lecturerService;
+    private SchoolService schoolService;
 
     //Create
     public DepartmentResponseDto createDepartment(DepartmentRequestDto departmentRequestDto){
         var department = modelMappers.mapToDepartment(departmentRequestDto);
+            if(departmentRequestDto.lecturerNumber() != null){
+                var hod = lecturerService.findByLecturerNumber(departmentRequestDto.lecturerNumber());
+                department.setHod(hod);
+            }
+            var school = schoolService.findBySchoolId(departmentRequestDto.schoolId());
+            department.setSchool(school);
         var savedDepartment = departmentRepository.save(department);
         return modelMappers.mapToDepartmentResponse(savedDepartment);
     }
@@ -40,12 +49,19 @@ public class DepartmentService {
     public DepartmentResponseDto updateDepartment(DepartmentRequestDto departmentRequestDto, String departmentCode){
         var newDepartment = modelMappers.mapToDepartment(departmentRequestDto);
             Integer Id = departmentRepository
-                        .findByDepartmentCode(departmentCode)
+                        .findByDepartmentCodeQuery(departmentCode)
                         .orElseThrow()
                         .getId();
             newDepartment.setId(Id);
                 var savedDepartment = departmentRepository.save(newDepartment);
         return modelMappers.mapToDepartmentResponse(savedDepartment);
+    }
+    public DepartmentResponseDto updateDepartmentHod(String code, String lecturerNumber){
+        var department = departmentRepository.findByDepartmentCodeQuery(code).orElseThrow();
+        var lecturer = lecturerService.findByLecturerNumber(lecturerNumber);
+            department.setHod(lecturer);
+            var updatedDepartment = departmentRepository.save(department);
+        return modelMappers.mapToDepartmentResponse(updatedDepartment);
     }
 
     //Retrieve
@@ -68,14 +84,15 @@ public class DepartmentService {
     }
     
     public DepartmentResponseDto findByDepartmentCode(String code){
-        var department = departmentRepository.findByDepartmentCode(code).orElseThrow();
+        var department = departmentRepository.findByDepartmentCodeQuery(code).orElseThrow();
         return modelMappers.mapToDepartmentResponse(department);
     }
     
-    public DepartmentResponseDto findByDepartmentId(Integer Id){
+    public DepartmentResponseDto findByDepartmentWithId(Integer Id){
         var department = departmentRepository.findById(Id).orElseThrow();
         return modelMappers.mapToDepartmentResponse(department);
     }
+
 
     //Delete
     public void deleteDepartment(DepartmentRequestDto departmentRequestDto){
@@ -88,13 +105,17 @@ public class DepartmentService {
     }
     
     public Integer deleteDepartment(String code){
-        return departmentRepository.deleteByDepartmentCode(code);
+        return departmentRepository.deleteByDepartmentCodeQuery(code);
     }
 
     public Integer getDepartmentId(String code){
-        return departmentRepository.findByDepartmentCode(code)
+        return departmentRepository.findByDepartmentCodeQuery(code)
                 .orElseThrow()
                 .getId();
+    }
+    //Inter-Service Communication
+    public Department findByDepartmentId(Integer Id){
+        return departmentRepository.findById(Id).orElseThrow();
     }
 
 }

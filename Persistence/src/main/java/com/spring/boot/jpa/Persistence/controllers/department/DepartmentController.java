@@ -3,6 +3,7 @@ package com.spring.boot.jpa.Persistence.controllers.department;
 import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentResponseDto;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +30,15 @@ public class DepartmentController {
     }
     @GetMapping("/code")
     public ResponseEntity<DepartmentResponseDto> getDepartmentWithCode(
-            @RequestParam(" department_code") String code
+            @RequestParam("department_code") String code
     ){
         return new ResponseEntity<>(departmentService.findByDepartmentCode(code),HttpStatus.OK);
+    }
+    @PostMapping
+    public ResponseEntity<DepartmentResponseDto> createNewDepartment(
+            @RequestBody @Valid DepartmentRequestDto departmentRequestDto
+    ){
+        return new ResponseEntity<>(departmentService.createDepartment(departmentRequestDto), HttpStatus.CREATED);
     }
     @PutMapping("/{code}/update")
     public ResponseEntity<DepartmentResponseDto> updateDepartment(
@@ -39,6 +46,14 @@ public class DepartmentController {
             @PathVariable String code
     ){
         return new ResponseEntity<>(departmentService.updateDepartment(departmentRequestDto, code),
+                HttpStatus.ACCEPTED);
+    }
+    @PatchMapping("/{code}/hod")
+    public ResponseEntity<DepartmentResponseDto> updateDepartmentHod(
+            @PathVariable String code,
+            @RequestParam("department_code") String lecturerNumber
+    ){
+        return new ResponseEntity<>(departmentService.updateDepartmentHod(code, lecturerNumber),
                 HttpStatus.ACCEPTED);
     }
     @DeleteMapping

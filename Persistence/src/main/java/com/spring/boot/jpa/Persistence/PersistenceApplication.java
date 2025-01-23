@@ -79,10 +79,11 @@ public class PersistenceApplication {
 				program2 = programRepository.save(program2);
 			Lecturer lecturer = new Lecturer();
 				lecturer.setDepartment(department);
-				lecturer.setDepartment_head(department);
+				lecturer.setDepartmentHead(department);
 				lecturer.setLecturerNumber("202177123");
 			//lecturer = lecturerRepository.save(lecturer);
-			for(int i = 0, j = 0; i < 500; i++) {
+			int last = 100;
+			for(int i = 0, j = 0; i < last; i++) {
 				Student student = new Student();
 				student.setStudentNumber(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
 				student.setFirstname(faker.name().firstName());
@@ -113,7 +114,7 @@ public class PersistenceApplication {
 						.concat(faker.number().randomDigitNotZero() + "")
 						.concat("gmail.com"));
 				var s = studentRepository.save(student);
-				if(i == 499){
+				if(i == last-1){
 					//lecturer.setEmail(s.getEmail());
 					lecturer.setDob(s.getDob());
 					lecturer.setNrcNumber(s.getNrcNumber());
@@ -182,15 +183,15 @@ public class PersistenceApplication {
 ////			}
 ////			System.out.println(studentService.findAllStudentsUsingPages().indexOf(studentService.findAllStudentsUsingPages().getLast()));
 ////			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-//		lecturer = lecturerRepository.save(lecturer);
-//			department2.setHOD(lecturer);
-//			departmentRepository.save(department2);
-//			lecturer.setLecturerNumber("2021873649");
-//			lecturer.setId(null);
-//			lecturer.setNrcNumber("648068/64/1");
-//			lecturerRepository.save(lecturer);
-//		department.setHOD(lecturer);
-//		departmentRepository.save(department);
+		lecturer = lecturerRepository.save(lecturer);
+			department2.setHod(lecturer);
+			departmentRepository.save(department2);
+			lecturer.setLecturerNumber("2021873649");
+			lecturer.setId(null);
+			lecturer.setNrcNumber("648068/64/1");
+			lecturerRepository.save(lecturer);
+		department.setHod(lecturer);
+		departmentRepository.save(department);
 
 //		studentService.findAllStudentsWithCustomFields("lastname", "firstname")
 //				.stream()
@@ -199,42 +200,39 @@ public class PersistenceApplication {
 //					System.out.print((String)obj[0] + "  ");
 //					System.out.println((String)obj[1]);
 //				});
-		studentService.findAllStudentsWithCustomFieldsSafe("firstname","lastname","dob", "studentNumber")
-				.stream()
-				.parallel()
-				.forEach(obj->{
-								System.out.print("Student={ ");
-								Arrays.stream(obj).forEach(o ->{
-									System.out.print(o);
-									System.out.print(", ");
-								});
-								System.out.println("}");
-						}
-				);
-			studentService.findStudentWithCustomFieldsSafe(snumber[0],"firstname","lastname","dob", "studentNumber")
-					.stream()
-					.parallel()
-					.forEach(obj->{
-								System.out.print("Student={ ");
-								Arrays.stream(obj).forEach(o ->{
-									System.out.print(o);
-									System.out.print(", ");
-								});
-								System.out.println("}");
-							}
-					);
-			lecturerService.findAllLecturersWithCustomFieldsSafe("firstname","lastname","dob", "lecturerNumber")
-					.stream()
-					.parallel()
-					.forEach(obj->{
-								System.out.print("Lecturer={ ");
-								Arrays.stream(obj).forEach(o ->{
-									System.out.print(o);
-									System.out.print(", ");
-								});
-								System.out.println("}");
-							}
-					);
+//		studentService.findAllStudentsWithCustomFieldsSafe("firstname","lastname","dob", "studentNumber")
+//				.stream()
+//				.parallel()
+//				.forEach(obj->{
+//								System.out.print("Student={ ");
+//								Arrays.stream(obj).forEach(o ->{
+//									System.out.print(o);
+//									System.out.print(", ");
+//								});
+//								System.out.println("}");
+//						}
+//				);
+//			var studentWithId = studentService.findStudentWithCustomFieldsSafe(snumber[0],"firstname","lastname","dob", "studentNumber");
+//								System.out.print("Student={ ");
+//								Arrays.stream(studentWithId).forEach(o ->{
+//									System.out.print(o);
+//									System.out.print(", ");
+//								});
+//								System.out.println("}");
+//
+//
+//			lecturerService.findAllLecturersWithCustomFieldsSafe("firstname","lastname","dob", "lecturerNumber")
+//					.stream()
+//					.parallel()
+//					.forEach(obj->{
+//								System.out.print("Lecturer={ ");
+//								Arrays.stream(obj).forEach(o ->{
+//									System.out.print(o);
+//									System.out.print(", ");
+//								});
+//								System.out.println("}");
+//							}
+//					);
 
 		///Error Testing
 

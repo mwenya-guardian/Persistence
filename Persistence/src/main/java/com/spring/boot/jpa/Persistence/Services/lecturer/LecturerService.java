@@ -5,7 +5,6 @@ import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
-import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.lecturer.LecturerRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,7 +12,6 @@ import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -36,6 +35,7 @@ public class LecturerService {
     //Create
     public LecturerResponseDto createLecturer(LecturerRequestDto lecturerRequestDto){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
+            lecturer.setLecturerNumber(new Random().longs()+"");
             lecturer = lecturerRepository.save(lecturer);
         return modelMappers.mapToLecturerResponse(lecturer);
     }
@@ -60,7 +60,7 @@ public class LecturerService {
                 .map(modelMappers::mapToLecturerResponse)
                 .orElseThrow();
     }
-    public LecturerResponseDto findLecturerWithLecturerId(String id){
+    public LecturerResponseDto findLecturerWithLecturerNumber(String id){
         return lecturerRepository.findByLecturerNumber(id)
                 .map(modelMappers::mapToLecturerResponse)
                 .orElseThrow();
@@ -110,7 +110,6 @@ public class LecturerService {
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-
     //Update
     public LecturerResponseDto updateLecturer(LecturerRequestDto lecturerRequestDto, String id){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
@@ -132,5 +131,11 @@ public class LecturerService {
         return lecturerRepository.findByLecturerNumber(lectureNumber)
                 .orElseThrow()
                 .getId();
+    }
+
+    //Inter-Service Communication
+    public Lecturer findByLecturerNumber(String number){
+        return lecturerRepository.findByLecturerNumber(number)
+                .orElseThrow();
     }
 }
