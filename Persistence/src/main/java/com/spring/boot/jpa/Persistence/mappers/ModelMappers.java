@@ -56,7 +56,7 @@ public class ModelMappers {
     public Course mapToCourse(@NotNull CourseRequestDto courseRequestDto){
         Course newCourse = new Course();
             newCourse.setCourseName(courseRequestDto.courseName());
-            newCourse.setCourseCode(courseRequestDto.courseName());
+            newCourse.setCourseCode(courseRequestDto.courseCode());
             newCourse.setDepartment(new Department(
                     courseRequestDto.departmentId()
             ));
@@ -73,13 +73,12 @@ public class ModelMappers {
     }
     public Lecture mapToLecture(@NotNull LectureRequestDto lectureRequestDto){
         Lecture newLecture = new Lecture();
-            newLecture.setLecturer(new Lecturer(
-                            Integer.getInteger(lectureRequestDto.lecturerId()))
-            );
-            newLecture.setCourse(new Course(
-                    Integer.getInteger(
-                            lectureRequestDto.courseId())
-            ));
+//            newLecture.setLecturer(new Lecturer(
+//                    lectureRequestDto.lecturerId())
+//            );
+//            newLecture.setCourse(new Course(
+//                            lectureRequestDto.courseId()
+//            ));
             newLecture.setLectureCode(lectureRequestDto.code());
             newLecture.setStartTime(lectureRequestDto.startTime());
             newLecture.setEndTime(lectureRequestDto.endTime());

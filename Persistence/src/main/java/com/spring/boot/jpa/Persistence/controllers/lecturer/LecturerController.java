@@ -55,14 +55,15 @@ public class LecturerController {
     @PutMapping("/{lecturerNumber}/update")
     public ResponseEntity<LecturerResponseDto> updateLecturer(
             @RequestBody LecturerRequestDto lecturerRequestDto,
-            @PathVariable String lecturerId
+            @PathVariable String lecturerNumber
     ){
-        return new ResponseEntity<>(lecturerService.updateLecturer(lecturerRequestDto, lecturerId),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(lecturerService.updateLecturer(lecturerRequestDto, lecturerNumber),
+                HttpStatus.ACCEPTED);
     }
     @DeleteMapping("/{lecturerNumber}/delete")
-    public ResponseEntity<HashMap<String, String>> deleteLecturerWithCode(@PathVariable String lecturerId){
+    public ResponseEntity<HashMap<String, String>> deleteLecturerWithCode(@PathVariable String lecturerNumber){
         var map = new HashMap<String, String>();
-        var affectedRows = lecturerService.deleteLecturerWithLecturerId(lecturerId);
+        var affectedRows = lecturerService.deleteLecturerWithLecturerId(lecturerNumber);
         var message = affectedRows==1?
                 "Deleted":"Delete Failed";
         map.put("message", message);

@@ -48,15 +48,15 @@ public class DepartmentController {
         return new ResponseEntity<>(departmentService.updateDepartment(departmentRequestDto, code),
                 HttpStatus.ACCEPTED);
     }
-    @PatchMapping("/{code}/hod")
+    @PatchMapping("/{code}/hod/update")
     public ResponseEntity<DepartmentResponseDto> updateDepartmentHod(
             @PathVariable String code,
-            @RequestParam("department_code") String lecturerNumber
+            @RequestParam("lecture_number") String lecturerNumber
     ){
         return new ResponseEntity<>(departmentService.updateDepartmentHod(code, lecturerNumber),
                 HttpStatus.ACCEPTED);
     }
-    @DeleteMapping
+    @DeleteMapping("{code}/delete")
     public ResponseEntity<HashMap<String, String>> deleteDepartment(@PathVariable String code){
         var map = new HashMap<String, String>();
         var affectedRows = departmentService.deleteDepartment(code);

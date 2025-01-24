@@ -30,6 +30,8 @@ public class CourseService {
     //Create
     public CourseResponseDto createCourse(CourseRequestDto courseRequestDto){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
+            var department = departmentService.findByDepartmentId(courseRequestDto.departmentId());
+            newCourse.setDepartment(department);
         var savedCourse = courseRepository.save(newCourse);
         return modelMappers.mapToCourseResponse(savedCourse);
     }

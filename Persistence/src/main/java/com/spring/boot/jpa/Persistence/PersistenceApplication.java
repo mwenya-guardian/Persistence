@@ -35,7 +35,7 @@ public class PersistenceApplication {
 		SpringApplication.run(PersistenceApplication.class, args);
 	}
 
-	@Bean
+	//@Bean
 	public CommandLineRunner commandLineRunner(SchoolRepository schoolRepository,
 											   DepartmentRepository departmentRepository,
 											   ProgramRepository programRepository,

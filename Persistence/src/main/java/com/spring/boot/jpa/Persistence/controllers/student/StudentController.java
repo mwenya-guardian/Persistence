@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -25,37 +26,37 @@ public class StudentController {
 
     @GetMapping("/page")
     public ResponseEntity<List<StudentResponseDto>> getAllStudentsByPaging(
-            @RequestParam Integer pageNumber,
-            @RequestParam Integer pageSize,
-            @RequestParam String sort
+            @RequestParam("pageNumber") Integer pageNumber,
+            @RequestParam("pageSize") Integer pageSize,
+            @RequestParam("sort") String sort
     ){
         sort = sort.substring(1, sort.lastIndexOf('"'));
         return new ResponseEntity<>(
                 studentService.findAllStudentsUsingPages(pageNumber, pageSize, sort),
                 HttpStatus.OK);
     }
-    @GetMapping("/{studentId}")
+    @GetMapping("/{studentNumber}")
     public ResponseEntity<StudentResponseDto> getStudentWithId(
-            @PathVariable String studentId
+            @PathVariable("studentNumber") String studentNumber
     ){
-        var student = studentService.findStudentByStudentNumber(studentId);
+        var student = studentService.findStudentByStudentNumber(studentNumber);
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
     @GetMapping("/columns")
     public ResponseEntity<List<Object[]>> getAllStudentsWithColumns(
-            @RequestParam String ...columns
+            @RequestParam("columns") String ...columns
     ){
         return new ResponseEntity<>(
                 studentService.findAllStudentsWithCustomFieldsSafe(columns),
                 HttpStatus.OK);
     }
-    @GetMapping("/{studentId}/columns")
+    @GetMapping("/{studentNumber}/columns")
     public ResponseEntity<Object[]> getStudentsWithColumns(
-            @PathVariable String studentId,
-            @RequestParam String[] columns
+            @PathVariable("studentNumber") String studentNumber,
+            @RequestParam("columns") String[] columns
     ){
         return new ResponseEntity<>(
-                studentService.findStudentWithCustomFieldsSafe(studentId, columns),
+                studentService.findStudentWithCustomFieldsSafe(studentNumber, columns),
                 HttpStatus.OK);
     }
     @GetMapping("/field")
@@ -75,25 +76,27 @@ public class StudentController {
                 studentService.createStudent(requestDto),
                 HttpStatus.CREATED);
     }
-    @PutMapping("/{studentId}/update")
+    @PutMapping("/{studentNumber}/update")
     public ResponseEntity<StudentResponseDto> updateStudent(
             @RequestBody StudentRequestDto studentRequestDto,
-            @PathVariable String studentId
+            @PathVariable("studentNumber") String studentNumber
     ){
 
         return new ResponseEntity<>(
-                studentService.updateStudent(studentRequestDto, studentId),
+                studentService.updateStudent(studentRequestDto, studentNumber),
                 HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{studentId}/delete")
-    public ResponseEntity<String> deleteStudent(
-            @PathVariable String studentId
+    @DeleteMapping("/{studentNumber}/delete")
+    public ResponseEntity<HashMap<String, String>> deleteStudent(
+            @PathVariable("studentNumber") String studentNumber
     ){
-        var affectedRows = studentService.deleteStudentsWithStudentNumber(studentId);
-            var body = affectedRows == 1?
-                    "{\"message\": \"Deleted Safely\"}":
-                    "{\"Error\": \"Delete Failed\"}";
-        return new ResponseEntity<>(body, affectedRows == 1?HttpStatus.ACCEPTED:HttpStatus.NOT_MODIFIED);
+        var map = new HashMap<String, String>();
+        var affectedRows = studentService.deleteStudentsWithStudentNumber(studentNumber);
+        var message = affectedRows==1?
+                "Deleted":"Failed";
+        map.put("message", message);
+        map.put("affectedRows", String.valueOf(affectedRows));
+        return new ResponseEntity<>(map, affectedRows == 1?HttpStatus.ACCEPTED:HttpStatus.NOT_MODIFIED);
     }
 }

@@ -30,7 +30,8 @@ public class CourseController {
         return new ResponseEntity<>(courseService.findAllCourseByName(name), HttpStatus.OK);
     }
     @GetMapping("/department")
-    private ResponseEntity<List<CourseResponseDto>> getAllCoursesWithDepartmentCode(@RequestParam String department){
+    private ResponseEntity<List<CourseResponseDto>> getAllCoursesWithDepartmentCode(
+            @RequestParam String department){
         return new ResponseEntity<>(courseService.findAllCoursesByDepartment(department), HttpStatus.OK);
     }
     @GetMapping("/{code}")

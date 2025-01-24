@@ -8,7 +8,6 @@ import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.repositories.lecture.LectureRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,8 @@ public class LectureService {
 
     //Create
     public LectureResponseDto createLecture(LectureRequestDto lectureRequestDto){
-        var newLacture = modelMappers.mapToLecture(lectureRequestDto);
-        var savedLecture = lectureRepository.save(newLacture);
+        var newLecture = modelMappers.mapToLecture(lectureRequestDto);
+        var savedLecture = lectureRepository.save(newLecture);
         return modelMappers.mapToLectureResponse(savedLecture);
     }
 

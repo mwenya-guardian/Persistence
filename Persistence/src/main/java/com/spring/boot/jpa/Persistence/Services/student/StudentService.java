@@ -115,7 +115,7 @@ public class StudentService {
             criteriaQuery.multiselect(columns);
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
-    public Object[] findStudentWithCustomFieldsSafe(String id, String... args){
+    public Object[] findStudentWithCustomFieldsSafe(String studentNumber, String... args){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
         Root<Student> studentRoot = criteriaQuery.from(Student.class);
@@ -125,7 +125,7 @@ public class StudentService {
                     final String column = String.valueOf(arg);
                     columns.add(studentRoot.get(column));
                 });
-        Predicate studentNumberEqualTo = criteriaBuilder.equal(studentRoot.get("studentNumber"), id);
+        Predicate studentNumberEqualTo = criteriaBuilder.equal(studentRoot.get("studentNumber"), studentNumber);
         criteriaQuery.multiselect(columns).where(studentNumberEqualTo);
         return entityManager.createQuery(criteriaQuery).getSingleResult();
     }
