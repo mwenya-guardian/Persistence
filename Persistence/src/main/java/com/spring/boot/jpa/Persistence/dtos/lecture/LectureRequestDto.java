@@ -1,27 +1,33 @@
 package com.spring.boot.jpa.Persistence.dtos.lecture;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Positive;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public record LectureRequestDto (
         @NotNull
+        @NotBlank
         @NotEmpty
-        @Length(min = 1, max = 255)
+        @Length(min = 1, max = 100)
         String code,
-        @Positive
-        Integer courseId,
         @NotNull
-        @Positive
-        Integer lecturerId,
+        @NotBlank
+        @NotEmpty
+        @Length(min = 2, max = 12)
+        String courseCode,
         @NotNull
+        @NotEmpty
+        @NotBlank
+        @Length(min = 10, max = 12)
+        String lecturerNumber,
+        @NotNull
+        @NotBlank
+        @JsonFormat(pattern = "HH:mm:ss")
         LocalTime startTime,
         @NotNull
+        @NotBlank
+        @JsonFormat(pattern = "HH:mm:ss")
         LocalTime endTime
 ) {}

@@ -1,38 +1,44 @@
 package com.spring.boot.jpa.Persistence.Services.program;
 
 import com.spring.boot.jpa.Persistence.Services.course.CourseService;
+import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramCourseListRequestDto;
-import com.spring.boot.jpa.Persistence.dtos.program.ProgramCourseListResponseDto;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.program.ProgramCourseList;
+import com.spring.boot.jpa.Persistence.repositories.program.ProgramCourseListRepository;
 import com.spring.boot.jpa.Persistence.repositories.program.ProgramRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Getter
 @Setter
 @Service
 @AllArgsConstructor
 public class ProgramService {
+    private ProgramCourseListRepository programCourseListRepository;
     private ProgramRepository programRepository;
+    private DepartmentService departmentService;
     private CourseService courseService;
     private ModelMappers modelMappers;
 
     //Create
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public ProgramResponseDto createProgram(ProgramRequestDto programRequestDto){
-        var newProgram = modelMappers.mapToProgram(programRequestDto, null);
-        var savedProgram = programRepository.save(newProgram);
+        var newProgram = modelMappers.mapToProgram(programRequestDto);
+            var department = departmentService.findByDepartmentCode(programRequestDto.departmentCode());
+                newProgram.setDepartment(department);
+                newProgram.setSchool(department.getSchool());
+        var savedProgram = programRepository.saveAndFlush(newProgram);
             if(programRequestDto.courseList() != null && !programRequestDto.courseList().isEmpty()){
                 this.updateProgramCourseList(programRequestDto.courseList(), savedProgram.getProgramId());
             }
@@ -45,30 +51,36 @@ public class ProgramService {
 
     //Update
     public ProgramResponseDto updateProgram(ProgramRequestDto programRequestDto, Integer programId){
-        var newProgram = modelMappers.mapToNewProgram(programRequestDto);
-        programRepository.findById(programId).orElseThrow();
-            newProgram.setProgramId(programId);
+        var newProgram = modelMappers.mapToProgram(programRequestDto);
+            programRepository.findById(programId).orElseThrow();
+            var department = departmentService.findByDepartmentCode(programRequestDto.departmentCode());
+                newProgram.setProgramId(programId);
+                newProgram.setDepartment(department);
+                newProgram.setSchool(department.getSchool());
         var savedProgram = programRepository.save(newProgram);
         return modelMappers.mapToProgramResponse(savedProgram);
     }
 
-    @Transactional
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public ProgramResponseDto updateProgramCourseList(List<ProgramCourseListRequestDto> courseList, Integer id){
         var program = programRepository.findById(id)
                 .orElseThrow();
-        var programCourseList = program.getProgramCourseList();
+        List<ProgramCourseList> programCourseList = program.getProgramCourseList()
+                .orElse(new ArrayList<>());
         courseList.forEach(args ->{
-            if(programCourseList.stream().noneMatch(existing -> existing.getCourse().getCourseId()
-                                        .equals(args.course()))){
-                programCourseList.add(
-                        new ProgramCourseList(
-                                args.year(),
-                                new Program(program.getProgramId()),
-                                new Course(args.course()))
-                );
+            if(programCourseList.stream().noneMatch(existing -> existing.getCourse().getCourseCode()
+                                        .equals(args.courseCode()))){
+                ProgramCourseList newProgramCourseList = new ProgramCourseList();
+                    newProgramCourseList.setCourse(
+                            courseService.findByCourseCode(args.courseCode())
+                    );
+                    newProgramCourseList.setProgram(program);
+                    newProgramCourseList.setYear(args.year()+"");
+                    programCourseListRepository.save(newProgramCourseList);
+                    programCourseList.add(programCourseListRepository.save(newProgramCourseList));
             }
         });
-        var updatedProgram = programRepository.save(program);
+        var updatedProgram = programRepository.saveAndFlush(program);
         return modelMappers.mapToProgramResponse(updatedProgram);
 
     }

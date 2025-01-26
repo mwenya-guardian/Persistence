@@ -26,7 +26,7 @@ public class LectureController {
     public ResponseEntity<LectureResponseDto> getLectureWithId(@PathVariable String code){
         return new ResponseEntity<>(lectureService.findLectureWithCode(code), HttpStatus.OK);
     }
-    @GetMapping("/course")
+    @GetMapping("/courseCode")
     public ResponseEntity<List<LectureResponseDto>> getAllLecturesWithCourse(
             @RequestParam("course_code") String course
     ){

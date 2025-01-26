@@ -43,7 +43,8 @@ public class SchoolController {
         return new ResponseEntity<>(schoolService.findSchoolWithCode(code), HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<SchoolResponseDto> createNewSchool(@RequestBody SchoolRequestDto schoolRequestDto){
+    public ResponseEntity<SchoolResponseDto> createNewSchool(
+            @RequestBody SchoolRequestDto schoolRequestDto){
         return new ResponseEntity<>(schoolService.createSchool(schoolRequestDto), HttpStatus.OK);
     }
     @PutMapping("{code}/update")

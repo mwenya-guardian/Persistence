@@ -32,7 +32,8 @@ public class ProgramController {
     }
 
     @PostMapping
-    public ResponseEntity<ProgramResponseDto> createNewProgram(@RequestBody ProgramRequestDto programRequestDto){
+    public ResponseEntity<ProgramResponseDto> createNewProgram(
+            @RequestBody ProgramRequestDto programRequestDto){
         return new ResponseEntity<>(programService.createProgram(programRequestDto),HttpStatus.CREATED);
     }
     @PutMapping("/{id}/update")

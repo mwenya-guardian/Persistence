@@ -19,13 +19,14 @@ public class Lecture {
     @Id
     @GeneratedValue
     private Integer lectureId;
+    @Column(unique = true)
     private String lectureCode;
     private Integer duration;
     private LocalTime startTime;
     private LocalTime endTime;
 
     @ManyToOne
-    @JoinColumn(name = "course")
+    @JoinColumn(name = "courseCode")
     @JsonBackReference
     private Course course;
 

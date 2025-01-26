@@ -27,7 +27,11 @@ public class LectureService {
     //Create
     public LectureResponseDto createLecture(LectureRequestDto lectureRequestDto){
         var newLecture = modelMappers.mapToLecture(lectureRequestDto);
-        var savedLecture = lectureRepository.save(newLecture);
+            var lecturer = lecturerService.findByLecturerNumber(lectureRequestDto.lecturerNumber());
+            var course = courseService.findByCourseCode(lectureRequestDto.courseCode());
+                newLecture.setLecturer(lecturer);
+                newLecture.setCourse(course);
+        var savedLecture = lectureRepository.saveAndFlush(newLecture);
         return modelMappers.mapToLectureResponse(savedLecture);
     }
 

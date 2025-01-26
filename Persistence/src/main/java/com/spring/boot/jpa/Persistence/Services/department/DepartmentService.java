@@ -29,12 +29,13 @@ public class DepartmentService {
     public DepartmentResponseDto createDepartment(DepartmentRequestDto departmentRequestDto){
         var department = modelMappers.mapToDepartment(departmentRequestDto);
             if(departmentRequestDto.lecturerNumber() != null){
+                Long.valueOf(departmentRequestDto.lecturerNumber());
                 var hod = lecturerService.findByLecturerNumber(departmentRequestDto.lecturerNumber());
                 department.setHod(hod);
             }
-            var school = schoolService.findBySchoolId(departmentRequestDto.schoolId());
+            var school = schoolService.findBySchoolCode(departmentRequestDto.schoolCode());
             department.setSchool(school);
-        var savedDepartment = departmentRepository.save(department);
+        var savedDepartment = departmentRepository.saveAndFlush(department);
         return modelMappers.mapToDepartmentResponse(savedDepartment);
     }
 
@@ -83,7 +84,7 @@ public class DepartmentService {
                 .toList();
     }
     
-    public DepartmentResponseDto findByDepartmentCode(String code){
+    public DepartmentResponseDto findWithDepartmentCode(String code){
         var department = departmentRepository.findByDepartmentCodeQuery(code).orElseThrow();
         return modelMappers.mapToDepartmentResponse(department);
     }
@@ -116,6 +117,9 @@ public class DepartmentService {
     //Inter-Service Communication
     public Department findByDepartmentId(Integer Id){
         return departmentRepository.findById(Id).orElseThrow();
+    }
+    public Department findByDepartmentCode(String code){
+        return departmentRepository.findByDepartmentCode(code).orElseThrow();
     }
 
 }

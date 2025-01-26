@@ -13,6 +13,8 @@ public record CourseRequestDto(
     @Length(min = 2, max = 255)
     String courseName,
     @NotNull
-    @Positive
-    Integer departmentId
+    @NotBlank
+    @NotEmpty
+    @Length(min = 2, max = 10)
+    String departmentCode
 ) {}

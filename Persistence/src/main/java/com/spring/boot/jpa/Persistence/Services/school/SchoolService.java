@@ -89,8 +89,9 @@ public class SchoolService {
         var school = schoolRepository.findById(id).orElse(new School());
         return modelMappers.mapToSchoolResponseWithOutJoins(school);
     }
-    public School findBySchoolId(Integer id){
-        return schoolRepository.findById(id).orElseThrow();
+    public School findBySchoolCode(String schoolCode){
+        return schoolRepository.findBySchoolCode(schoolCode)
+                .orElseThrow();
     }
 
     //Delete

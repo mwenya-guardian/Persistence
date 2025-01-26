@@ -38,7 +38,7 @@ public class ModelMappers {
 //                    Integer.getInteger(
 //                            departmentRequestDto.lecturerNumber()
 //                    )));
-//            newDepartment.setSchool(new School(departmentRequestDto.schoolId()
+//            newDepartment.setSchool(new School(departmentRequestDto.schoolCode()
 //                    ));
         return newDepartment;
     }
@@ -57,9 +57,6 @@ public class ModelMappers {
         Course newCourse = new Course();
             newCourse.setCourseName(courseRequestDto.courseName());
             newCourse.setCourseCode(courseRequestDto.courseCode());
-            newCourse.setDepartment(new Department(
-                    courseRequestDto.departmentId()
-            ));
         return newCourse;
     }
     public CourseResponseDto mapToCourseResponse(@NotNull Course course){
@@ -73,12 +70,6 @@ public class ModelMappers {
     }
     public Lecture mapToLecture(@NotNull LectureRequestDto lectureRequestDto){
         Lecture newLecture = new Lecture();
-//            newLecture.setLecturer(new Lecturer(
-//                    lectureRequestDto.lecturerId())
-//            );
-//            newLecture.setCourse(new Course(
-//                            lectureRequestDto.courseId()
-//            ));
             newLecture.setLectureCode(lectureRequestDto.code());
             newLecture.setStartTime(lectureRequestDto.startTime());
             newLecture.setEndTime(lectureRequestDto.endTime());
@@ -89,7 +80,8 @@ public class ModelMappers {
                 lecture.getLectureCode(),
                 lecture.getCourse().getCourseName(),
                 lecture.getCourse().getCourseCode(),
-                lecture.getLecturer().getLastname().toUpperCase(),
+                lecture.getLecturer().getFirstname().toUpperCase().charAt(0) + ". "
+                            + lecture.getLecturer().getLastname().toUpperCase(),
                 lecture.getStartTime(),
                 lecture.getEndTime()
         );
@@ -132,38 +124,16 @@ public class ModelMappers {
         );
         return newLecturerResponseDto;
     }
-    public Program mapToProgram(@NotNull ProgramRequestDto programRequestDto, Integer id){
+    public Program mapToProgram(@NotNull ProgramRequestDto programRequestDto){
         Program newProgram = new Program();
             newProgram.setProgramCode(programRequestDto.programCode());
             newProgram.setProgramName(programRequestDto.programName());
-            newProgram.setDepartment(new Department(
-                    Integer.getInteger(programRequestDto.departmentId())
-            ));
-        newProgram.setSchool(new School(
-                Integer.getInteger(programRequestDto.schoolId())
-        ));
-        var courseList = new ArrayList<ProgramCourseList>();
-        var requestCourseList = programRequestDto.courseList();
-        if(requestCourseList != null && !requestCourseList.isEmpty()){
-            requestCourseList.forEach(args -> {
-                courseList.add(
-                        new ProgramCourseList(args.year(), new Program(id), new Course(args.course()))
-                );
-            });
-        }
-            newProgram.setProgramCourseList(courseList);
         return newProgram;
     }
     public Program mapToNewProgram(@NotNull ProgramRequestDto programRequestDto){
         Program newProgram = new Program();
         newProgram.setProgramCode(programRequestDto.programCode());
         newProgram.setProgramName(programRequestDto.programName());
-        newProgram.setDepartment(new Department(
-                Integer.getInteger(programRequestDto.departmentId())
-        ));
-        newProgram.setSchool(new School(
-                Integer.getInteger(programRequestDto.schoolId())
-        ));
         return newProgram;
     }
     public ProgramResponseDto mapToProgramResponse(@NotNull Program program){
@@ -175,7 +145,9 @@ public class ModelMappers {
                 program.getSchool().getSchoolName(),
                 program.getDepartment().getDepartmentName(),
                 program.getDepartment().getDepartmentName(),
-                program.getProgramCourseList().stream()
+                program.getProgramCourseList()
+                        .orElse(new ArrayList<ProgramCourseList>())
+                        .stream()
                         .parallel()
                         .map(ProgramCourseList::getCourse)
                         .map(this::mapToCourseResponse)
@@ -218,8 +190,8 @@ public class ModelMappers {
             newStudent.setEmail(studentRequestDto.email());
             newStudent.setAddress(studentRequestDto.address());
             newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
-            newStudent.setSchool(new School(studentRequestDto.schoolId()));
-            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
+//            newStudent.setSchool(new School(studentRequestDto.schoolCode()));
+//            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
             newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;
     }
@@ -236,7 +208,7 @@ public class ModelMappers {
         newStudent.setEmail(studentRequestDto.email());
         newStudent.setAddress(studentRequestDto.address());
         newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
-//        newStudent.setSchool(new School(studentRequestDto.schoolId()));
+//        newStudent.setSchool(new School(studentRequestDto.schoolCode()));
 //        newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
 //        newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;

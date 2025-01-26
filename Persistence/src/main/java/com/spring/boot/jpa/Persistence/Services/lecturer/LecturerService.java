@@ -35,8 +35,10 @@ public class LecturerService {
     //Create
     public LecturerResponseDto createLecturer(LecturerRequestDto lecturerRequestDto){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
-            lecturer.setLecturerNumber(new Random().longs()+"");
-            lecturer = lecturerRepository.save(lecturer);
+            var lectuerNumber = new Random();
+            //lecturer.setLecturerNumber(String.valueOf(lectuerNumber.nextLong(2021000001, 2025999999)));
+            lecturer.setLecturerNumber("2021504389");
+            lecturer = lecturerRepository.saveAndFlush(lecturer);
         return modelMappers.mapToLecturerResponse(lecturer);
     }
 

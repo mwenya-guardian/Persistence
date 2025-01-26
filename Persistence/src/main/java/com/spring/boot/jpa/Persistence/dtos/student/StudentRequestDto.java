@@ -47,8 +47,9 @@ public record StudentRequestDto (
         @FutureOrPresent
         Date enrollmentDate,
         @NotNull
-        @Positive
-        Integer schoolId,
+        @NotBlank
+        @Length(min = 2, max = 10)
+        String schoolCode,
         @NotNull
         @Positive
         Integer programId,

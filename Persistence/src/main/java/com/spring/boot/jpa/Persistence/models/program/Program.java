@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -25,22 +26,27 @@ public class Program {
     private String programCode;
     @Column(nullable = false)
     private String programName;
+    @Column(length = 1)
     private String Duration;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonBackReference
     private School school;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @JsonBackReference
     private Department department;
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Student> students;
-    
+
+    public Optional<List<ProgramCourseList>> getProgramCourseList() {
+        return Optional.ofNullable(programCourseList);
+    }
+
     @OneToMany(mappedBy = "program", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<ProgramCourseList> programCourseList;

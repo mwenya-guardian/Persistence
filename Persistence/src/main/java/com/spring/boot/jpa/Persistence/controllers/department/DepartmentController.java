@@ -32,7 +32,7 @@ public class DepartmentController {
     public ResponseEntity<DepartmentResponseDto> getDepartmentWithCode(
             @RequestParam("department_code") String code
     ){
-        return new ResponseEntity<>(departmentService.findByDepartmentCode(code),HttpStatus.OK);
+        return new ResponseEntity<>(departmentService.findWithDepartmentCode(code),HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity<DepartmentResponseDto> createNewDepartment(

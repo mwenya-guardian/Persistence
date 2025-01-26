@@ -30,9 +30,9 @@ public class CourseService {
     //Create
     public CourseResponseDto createCourse(CourseRequestDto courseRequestDto){
         var newCourse = modelMappers.mapToCourse(courseRequestDto);
-            var department = departmentService.findByDepartmentId(courseRequestDto.departmentId());
+            var department = departmentService.findByDepartmentCode(courseRequestDto.departmentCode());
             newCourse.setDepartment(department);
-        var savedCourse = courseRepository.save(newCourse);
+        var savedCourse = courseRepository.saveAndFlush(newCourse);
         return modelMappers.mapToCourseResponse(savedCourse);
     }
 
@@ -110,6 +110,10 @@ public class CourseService {
                 .getCourseId();
     }
 
+    public Course findByCourseCode(String courseCode){
+        return courseRepository.findByCourseCode(courseCode)
+                .orElseThrow();
+    }
 
 
 //    public List<Course> findAllCoursesBySchool(){

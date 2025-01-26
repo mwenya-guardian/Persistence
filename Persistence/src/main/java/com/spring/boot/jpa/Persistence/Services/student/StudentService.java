@@ -43,12 +43,12 @@ public class StudentService {
             newStudent.setStudentNumber(
                     studentNumberGenerator.newStudentNUmberGenerate()
             );
-            var school = schoolService.findBySchoolId(studentRequestDto.schoolId());
+//            var school = schoolService.findBySchoolCode(studentRequestDto.schoolCode());
             var program = programService.findByProgramId(studentRequestDto.programId());
-            var department = departmentService.findByDepartmentId(studentRequestDto.departmentId());
+//            var department = departmentService.findByDepartmentId(studentRequestDto.departmentId());
                 newStudent.setProgram(program);
-                newStudent.setSchool(school);
-                newStudent.setDepartment(department);
+                newStudent.setSchool(program.getSchool());
+                newStudent.setDepartment(program.getDepartment());
         studentRepository.saveAndFlush(newStudent);
         var savedStudent = studentRepository.findByStudentNumberQuery(newStudent.getStudentNumber())
                 .orElseThrow();

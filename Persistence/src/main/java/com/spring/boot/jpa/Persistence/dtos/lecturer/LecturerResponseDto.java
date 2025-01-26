@@ -4,7 +4,7 @@ import java.util.Date;
 
 public record LecturerResponseDto (
         String nrcNumber,
-        String lecturerId,
+        String lecturerNumber,
         String firstname,
         String lastname,
         Date dob,
