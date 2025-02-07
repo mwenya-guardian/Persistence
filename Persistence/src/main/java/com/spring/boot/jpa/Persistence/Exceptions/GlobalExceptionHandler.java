@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     //occurs in a Spring application when attempting to perform a database operation,
     // such as remove(), outside the scope of a transactional context.
     // This typically means that the required transaction is not properly managed or not active when the operation is executed
-    //@ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
     public ResponseEntity<String> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }

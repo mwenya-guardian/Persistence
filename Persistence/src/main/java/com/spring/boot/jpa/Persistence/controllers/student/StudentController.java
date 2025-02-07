@@ -75,17 +75,8 @@ public class StudentController {
                 studentService.createStudent(requestDto),
                 HttpStatus.CREATED);
     }
-    @PutMapping("/{studentNumber}/update")
-    public ResponseEntity<StudentResponseDto> updateStudent(
-            @RequestBody StudentRequestDto studentRequestDto,
-            @PathVariable("studentNumber") String studentNumber
-    ){
 
-        return new ResponseEntity<>(
-                studentService.updateStudent(studentRequestDto, studentNumber),
-                HttpStatus.CREATED);
-    }
-    @PutMapping("/{studentNumber}/update/scalable")
+    @PutMapping("/{studentNumber}/update")
     public ResponseEntity<StudentResponseDto> updateStudentSafe(
             @RequestBody HashMap<String, String> studentFields,
             @PathVariable("studentNumber") String studentNumber

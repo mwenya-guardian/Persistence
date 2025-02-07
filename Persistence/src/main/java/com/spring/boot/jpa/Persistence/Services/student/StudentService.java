@@ -41,8 +41,6 @@ public class StudentService {
             newStudent.setStudentNumber(
                     studentNumberGenerator.newStudentNUmberGenerate()
             );
-//            var school = schoolService.findBySchoolCode(studentRequestDto.schoolCode());
-//            var department = departmentService.findByDepartmentId(studentRequestDto.departmentId());
             var program = programService.findByProgramId(studentRequestDto.programId());
                 newStudent.setProgram(program);
                 newStudent.setSchool(program.getSchool());
@@ -54,13 +52,6 @@ public class StudentService {
     }
 
     //Update
-    public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, String studentNumber){
-        var newStudent = modelMappers.mapToStudent(studentRequestDto);
-            var oldStudent = studentRepository.findByStudentNumberQuery(studentNumber)
-                    .orElseThrow();
-        var savedStudent = studentRepository.save(modelMappers.mapToStudent(newStudent, oldStudent));
-        return modelMappers.mapToStudentResponse(savedStudent);
-    }
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public StudentResponseDto updateStudentCustomSafeAndScalable(HashMap<String, String> map, String studentNumber){
         String programKey = "program";

@@ -34,12 +34,6 @@ public class ModelMappers {
         Department newDepartment = new Department();
             newDepartment.setDepartmentCode(departmentRequestDto.departmentCode());
             newDepartment.setDepartmentName(departmentRequestDto.departmentName());
-//            newDepartment.setHOD(new Lecturer(
-//                    Integer.getInteger(
-//                            departmentRequestDto.lecturerNumber()
-//                    )));
-//            newDepartment.setSchool(new School(departmentRequestDto.schoolCode()
-//                    ));
         return newDepartment;
     }
     public DepartmentResponseDto mapToDepartmentResponse(@NotNull Department department){
@@ -194,33 +188,7 @@ public class ModelMappers {
 //            newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;
     }
-    public Student mapToStudent(@NotNull Student newStudent, @NotNull Student oldStudent){
-        if(newStudent.getFirstname() != null)
-            oldStudent.setFirstname(newStudent.getFirstname());
-        if(newStudent.getLastname() != null)
-            oldStudent.setLastname(newStudent.getLastname());
-        if(newStudent.getDistrict() != null)
-            oldStudent.setDistrict(newStudent.getDistrict());
-        if(newStudent.getProvince() != null)
-            oldStudent.setProvince(newStudent.getProvince());
-        if(newStudent.getNationality() != null)
-            oldStudent.setNationality(newStudent.getNationality());
-        if(newStudent.getDob() != null)
-            oldStudent.setDob(newStudent.getDob());
-        if(newStudent.getNrcNumber() != null)
-            oldStudent.setNrcNumber(newStudent.getNrcNumber());
-        if(newStudent.getPhoneNumber() != null)
-            oldStudent.setPhoneNumber(newStudent.getPhoneNumber());
-        if(newStudent.getEmail() != null)
-            oldStudent.setEmail(newStudent.getEmail());
-        if(newStudent.getAddress() != null)
-            oldStudent.setAddress(newStudent.getAddress());
-//            newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
-//            newStudent.setSchool(new School(studentRequestDto.schoolCode()));
-//            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
-//            newStudent.setProgram(new Program(studentRequestDto.programId()));
-        return oldStudent;
-    }
+
     public Student mapToNewStudent(@NotNull StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
         newStudent.setFirstname(studentRequestDto.firstname());
@@ -233,10 +201,6 @@ public class ModelMappers {
         newStudent.setPhoneNumber(studentRequestDto.phoneNumber());
         newStudent.setEmail(studentRequestDto.email());
         newStudent.setAddress(studentRequestDto.address());
-//        newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
-//        newStudent.setSchool(new School(studentRequestDto.schoolCode()));
-//        newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
-//        newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;
     }
     public StudentResponseDto mapToStudentResponse(@NotNull Student student){
