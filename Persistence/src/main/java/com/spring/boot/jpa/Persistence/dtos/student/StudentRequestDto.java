@@ -3,6 +3,8 @@ package com.spring.boot.jpa.Persistence.dtos.student;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record StudentRequestDto (
@@ -43,9 +45,9 @@ public record StudentRequestDto (
         String email,
         @NotNull
         @Past
-        Date dob,
-        @FutureOrPresent
-        Date enrollmentDate,
+        LocalDate dob,
+//        @FutureOrPresent
+//        LocalDateTime enrollmentDate,
         @NotNull
         @NotBlank
         @Length(min = 2, max = 10)

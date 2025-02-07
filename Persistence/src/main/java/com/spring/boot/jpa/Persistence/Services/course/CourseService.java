@@ -1,17 +1,18 @@
 package com.spring.boot.jpa.Persistence.Services.course;
 
-import com.github.javafaker.Bool;
 import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.course.Course;
-import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.repositories.course.CourseRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Hashtable;
@@ -63,7 +64,7 @@ public class CourseService {
     public void deleteCourse(Integer courseId){
         courseRepository.deleteById(courseId);
     }
-    
+    @Transactional
     public Integer deleteCourse(String courseCode){
         return courseRepository.deleteByCourseCode(courseCode);
     }
@@ -74,6 +75,17 @@ public class CourseService {
     }
 
     //Retrieve
+    public List<CourseResponseDto> findAllCoursesUsingPages(Integer pageNumber, Integer pageSize, String sort){
+        Pageable pageable;
+        if(!sort.isEmpty())
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort).ascending());
+        else
+            pageable = PageRequest.of(pageNumber, pageSize);
+        return courseRepository.findAll(pageable)
+                .stream()
+                .map(modelMappers::mapToCourseResponse)
+                .toList();
+    }
     public List<CourseResponseDto> findAllCoursesByDepartment(String departmentCode){
         var department = departmentService.getDepartmentId(departmentCode);
         return courseRepository.findAllByDepartment(department)

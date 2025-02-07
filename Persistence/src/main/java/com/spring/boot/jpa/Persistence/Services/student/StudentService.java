@@ -18,9 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -44,34 +42,51 @@ public class StudentService {
                     studentNumberGenerator.newStudentNUmberGenerate()
             );
 //            var school = schoolService.findBySchoolCode(studentRequestDto.schoolCode());
-            var program = programService.findByProgramId(studentRequestDto.programId());
 //            var department = departmentService.findByDepartmentId(studentRequestDto.departmentId());
+            var program = programService.findByProgramId(studentRequestDto.programId());
                 newStudent.setProgram(program);
                 newStudent.setSchool(program.getSchool());
                 newStudent.setDepartment(program.getDepartment());
-        studentRepository.saveAndFlush(newStudent);
+            studentRepository.saveAndFlush(newStudent);
         var savedStudent = studentRepository.findByStudentNumberQuery(newStudent.getStudentNumber())
                 .orElseThrow();
-
         return modelMappers.mapToStudentResponse(savedStudent);
     }
 
     //Update
-    public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, Integer Id){
-        var newStudent = modelMappers.mapToStudent(studentRequestDto);
-            newStudent.setId(Id);
-        var savedStudent = studentRepository.save(newStudent);
-        return modelMappers.mapToStudentResponse(savedStudent);
-    }
     public StudentResponseDto updateStudent(StudentRequestDto studentRequestDto, String studentNumber){
         var newStudent = modelMappers.mapToStudent(studentRequestDto);
-            Integer Id = studentRepository.findByStudentNumberQuery(studentNumber)
-                    .orElseThrow()
-                    .getId();
-            newStudent.setId(Id);
-        var savedStudent = studentRepository.save(newStudent);
+            var oldStudent = studentRepository.findByStudentNumberQuery(studentNumber)
+                    .orElseThrow();
+        var savedStudent = studentRepository.save(modelMappers.mapToStudent(newStudent, oldStudent));
         return modelMappers.mapToStudentResponse(savedStudent);
     }
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
+    public StudentResponseDto updateStudentCustomSafeAndScalable(HashMap<String, String> map, String studentNumber){
+        String programKey = "program";
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<Student> updateQuery =  criteriaBuilder.createCriteriaUpdate(Student.class);
+        Root<Student> studentRoot = updateQuery.from(Student.class);
+            map.forEach((key, value)-> {
+                        if(!key.equals(programKey)) {
+                            updateQuery.set(key, value);
+                        }
+            });
+            updateQuery.where(criteriaBuilder.equal(studentRoot.get("studentNumber"), studentNumber));
+            int affectedRolls = entityManager.createQuery(updateQuery).executeUpdate();
+            if(affectedRolls == 0)
+                throw new NoSuchElementException("Student Number Does Not Exist");
+            Student persistedStudent = studentRepository.findByStudentNumberQuery(studentNumber).orElseThrow();
+                if(map.containsKey(programKey)){
+                    String value = map.get(programKey);
+                    var program = programService.findByProgramId(Integer.valueOf(value));
+                    persistedStudent.setProgram(program);
+                    persistedStudent.setDepartment(program.getDepartment());
+                    persistedStudent.setSchool(program.getSchool());
+                }
+        return modelMappers.mapToStudentResponse(studentRepository.saveAndFlush(persistedStudent));
+    }
+
 
     //Retrieve
     public List<StudentResponseDto> findAllStudents(){

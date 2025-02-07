@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-    @Query(value = "SELECT c FROM Course c WHERE c.department = :departmentId")
+    @Query(value = "SELECT c FROM Course c WHERE c.department.id = :departmentId")
     List<Course> findAllByDepartment(Integer departmentId);
     @Query(value = "SELECT c FROM Course c WHERE c.courseCode = :courseCode")
     Optional<Course> findByCourseCode(String courseCode);

@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.dtos.student;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record StudentResponseDto (
@@ -13,8 +15,8 @@ public record StudentResponseDto (
         String nationality,
         String phoneNumber,
         String email,
-        Date dob,
-        Date enrollmentDate,
+        LocalDate dob,
+        LocalDateTime enrollmentDate,
         String schoolName,
         String programName,
         String departmentName,
@@ -32,8 +34,8 @@ public record StudentResponseDto (
                               String nationality,
                               String phoneNumber,
                               String email,
-                              Date dob,
-                              Date enrollmentDate
+                              LocalDate dob,
+                              LocalDateTime enrollmentDate
                               ){
         return new StudentResponseDto(nrcNumber, studentId, firstname, lastname, address, province,
                 district, nationality, phoneNumber, email, dob, enrollmentDate,

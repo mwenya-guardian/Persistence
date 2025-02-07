@@ -22,6 +22,14 @@ public class ProgramController {
     public ResponseEntity<List<ProgramResponseDto>> getAllPrograms(){
         return new ResponseEntity<>(programService.findAllPrograms(), HttpStatus.OK);
     }
+    @GetMapping("/page")
+    public ResponseEntity<List<ProgramResponseDto>> getAllProgramsUsingPages(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber,
+            @RequestParam String sort
+    ){
+        return new ResponseEntity<>(programService.findAllProgramsUsingPages(pageNumber, pageSize, sort), HttpStatus.OK);
+    }
     @GetMapping("/name")
     public ResponseEntity<List<ProgramResponseDto>> getAllProgramsWithName(@RequestParam String name){
         return new ResponseEntity<>(programService.findAllProgramsWithName(name), HttpStatus.OK);

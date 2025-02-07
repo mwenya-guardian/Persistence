@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +22,5 @@ public class EntityBaseClass {
     private String phoneNumber;
     @Column(unique = true)
     private String email;
-    private Date dob;
+    private LocalDate dob;
 }

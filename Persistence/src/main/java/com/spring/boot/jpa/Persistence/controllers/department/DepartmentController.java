@@ -22,6 +22,14 @@ public class DepartmentController {
         return new ResponseEntity<>(departmentService.findAllDepartment(),
                 HttpStatus.OK);
     }
+    @GetMapping("/page")
+    public ResponseEntity<List<DepartmentResponseDto>> getAllProgramsUsingPages(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber,
+            @RequestParam String sort
+    ){
+        return new ResponseEntity<>(departmentService.findAllDepartmentsUsingPages(pageNumber, pageSize, sort), HttpStatus.OK);
+    }
     @GetMapping("/name")
     public ResponseEntity<List<DepartmentResponseDto>> getAllDepartmentsWithName(
             @RequestParam String name

@@ -10,6 +10,9 @@ import com.spring.boot.jpa.Persistence.repositories.department.DepartmentReposit
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,6 +69,17 @@ public class DepartmentService {
     }
 
     //Retrieve
+    public List<DepartmentResponseDto> findAllDepartmentsUsingPages(Integer pageNumber, Integer pageSize, String sort){
+        Pageable pageable;
+        if(!sort.isEmpty())
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort).ascending());
+        else
+            pageable = PageRequest.of(pageNumber, pageSize);
+        return departmentRepository.findAll(pageable)
+                .stream()
+                .map(modelMappers::mapToDepartmentResponse)
+                .toList();
+    }
     public List<DepartmentResponseDto> findAllDepartment(){
         var departmentList = departmentRepository.findAll();
         return departmentList

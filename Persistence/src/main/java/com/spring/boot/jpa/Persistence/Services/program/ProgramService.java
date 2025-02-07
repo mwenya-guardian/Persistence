@@ -5,6 +5,7 @@ import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramCourseListRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.program.ProgramResponseDto;
+import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.program.Program;
@@ -15,6 +16,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -85,6 +89,17 @@ public class ProgramService {
 
     }
     //Retrieve
+    public List<ProgramResponseDto> findAllProgramsUsingPages(Integer pageNumber, Integer pageSize, String sort){
+        Pageable pageable;
+        if(!sort.isEmpty())
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort).ascending());
+        else
+            pageable = PageRequest.of(pageNumber, pageSize);
+        return programRepository.findAll(pageable)
+                .stream()
+                .map(modelMappers::mapToProgramResponse)
+                .toList();
+    }
     public List<ProgramResponseDto> findAllProgramsWithName(String name){
         return programRepository.findAllByProgramNameLike(name)
                 .stream()

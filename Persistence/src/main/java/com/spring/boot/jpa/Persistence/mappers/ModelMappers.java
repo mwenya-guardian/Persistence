@@ -99,9 +99,7 @@ public class ModelMappers {
             newLecturer.setProvince(lecturerRequestDto.province());
             newLecturer.setPhoneNumber(lecturerRequestDto.phoneNumber());
             newLecturer.setNationality(lecturerRequestDto.nationality());
-            newLecturer.setDob(new Date(
-                    lecturerRequestDto.dob().getTime()
-            ));
+            newLecturer.setDob(lecturerRequestDto.dob());
             newLecturer.setEmail(lecturerRequestDto.email());
             newLecturer.setNrcNumber(lecturerRequestDto.nrcNumber());
         return newLecturer;
@@ -112,7 +110,8 @@ public class ModelMappers {
                 lecturer.getLecturerNumber(),
                 lecturer.getFirstname(),
                 lecturer.getLastname(),
-                new Date(lecturer.getDob().getTime()),
+                lecturer.getDob(),
+                lecturer.getEmploymentDate(),
                 lecturer.getAddress(),
                 lecturer.getProvince(),
                 lecturer.getDistrict(),
@@ -184,16 +183,43 @@ public class ModelMappers {
             newStudent.setDistrict(studentRequestDto.district());
             newStudent.setProvince(studentRequestDto.province());
             newStudent.setNationality(studentRequestDto.nationality());
-            newStudent.setDob(new Date(studentRequestDto.dob().getTime()));
+            newStudent.setDob(studentRequestDto.dob());
             newStudent.setNrcNumber(studentRequestDto.nrcNumber());
             newStudent.setPhoneNumber(studentRequestDto.phoneNumber());
             newStudent.setEmail(studentRequestDto.email());
             newStudent.setAddress(studentRequestDto.address());
-            newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
+//            newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
 //            newStudent.setSchool(new School(studentRequestDto.schoolCode()));
 //            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
-            newStudent.setProgram(new Program(studentRequestDto.programId()));
+//            newStudent.setProgram(new Program(studentRequestDto.programId()));
         return newStudent;
+    }
+    public Student mapToStudent(@NotNull Student newStudent, @NotNull Student oldStudent){
+        if(newStudent.getFirstname() != null)
+            oldStudent.setFirstname(newStudent.getFirstname());
+        if(newStudent.getLastname() != null)
+            oldStudent.setLastname(newStudent.getLastname());
+        if(newStudent.getDistrict() != null)
+            oldStudent.setDistrict(newStudent.getDistrict());
+        if(newStudent.getProvince() != null)
+            oldStudent.setProvince(newStudent.getProvince());
+        if(newStudent.getNationality() != null)
+            oldStudent.setNationality(newStudent.getNationality());
+        if(newStudent.getDob() != null)
+            oldStudent.setDob(newStudent.getDob());
+        if(newStudent.getNrcNumber() != null)
+            oldStudent.setNrcNumber(newStudent.getNrcNumber());
+        if(newStudent.getPhoneNumber() != null)
+            oldStudent.setPhoneNumber(newStudent.getPhoneNumber());
+        if(newStudent.getEmail() != null)
+            oldStudent.setEmail(newStudent.getEmail());
+        if(newStudent.getAddress() != null)
+            oldStudent.setAddress(newStudent.getAddress());
+//            newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
+//            newStudent.setSchool(new School(studentRequestDto.schoolCode()));
+//            newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
+//            newStudent.setProgram(new Program(studentRequestDto.programId()));
+        return oldStudent;
     }
     public Student mapToNewStudent(@NotNull StudentRequestDto studentRequestDto){
         Student newStudent = new Student();
@@ -202,12 +228,12 @@ public class ModelMappers {
         newStudent.setDistrict(studentRequestDto.district());
         newStudent.setProvince(studentRequestDto.province());
         newStudent.setNationality(studentRequestDto.nationality());
-        newStudent.setDob(new Date(studentRequestDto.dob().getTime()));
+        newStudent.setDob(studentRequestDto.dob());
         newStudent.setNrcNumber(studentRequestDto.nrcNumber());
         newStudent.setPhoneNumber(studentRequestDto.phoneNumber());
         newStudent.setEmail(studentRequestDto.email());
         newStudent.setAddress(studentRequestDto.address());
-        newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
+//        newStudent.setEnrollmentDate(new Date(studentRequestDto.enrollmentDate().getTime()));
 //        newStudent.setSchool(new School(studentRequestDto.schoolCode()));
 //        newStudent.setDepartment(new Department(studentRequestDto.departmentId()));
 //        newStudent.setProgram(new Program(studentRequestDto.programId()));
@@ -225,8 +251,8 @@ public class ModelMappers {
                 student.getNationality(),
                 student.getPhoneNumber(),
                 student.getEmail(),
-                student.getDob() != null? new java.util.Date(student.getDob().getTime()): null,
-                student.getEnrollmentDate() != null? new java.util.Date(student.getEnrollmentDate().getTime()): null,
+                student.getDob(),
+                student.getEnrollmentDate(),
                 student.getSchool().getSchoolName(),
                 student.getProgram().getProgramName(),
                 student.getDepartment().getDepartmentName(),
@@ -248,8 +274,8 @@ public class ModelMappers {
                 student.getNationality(),
                 student.getPhoneNumber(),
                 student.getEmail(),
-                student.getDob() != null? new java.util.Date(student.getDob().getTime()): null,
-                student.getEnrollmentDate() != null? new java.util.Date(student.getEnrollmentDate().getTime()): null
+                student.getDob(),
+                student.getEnrollmentDate()
         );
     }
 }

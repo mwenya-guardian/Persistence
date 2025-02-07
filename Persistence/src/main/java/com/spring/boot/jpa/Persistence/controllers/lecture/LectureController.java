@@ -22,6 +22,14 @@ public class LectureController {
     public ResponseEntity<List<LectureResponseDto>> getAllLectures(){
         return new ResponseEntity<>(lectureService.findAllLectures(),HttpStatus.OK);
     }
+    @GetMapping("/page")
+    public ResponseEntity<List<LectureResponseDto>> getAllProgramsUsingPages(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber,
+            @RequestParam String sort
+    ){
+        return new ResponseEntity<>(lectureService.findAllLecturesUsingPages(pageNumber, pageSize, sort), HttpStatus.OK);
+    }
     @GetMapping("/{code}")
     public ResponseEntity<LectureResponseDto> getLectureWithId(@PathVariable String code){
         return new ResponseEntity<>(lectureService.findLectureWithCode(code), HttpStatus.OK);

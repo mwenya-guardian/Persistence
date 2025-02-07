@@ -3,6 +3,7 @@ package com.spring.boot.jpa.Persistence.dtos.lecturer;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public record LecturerRequestDto (
@@ -44,7 +45,7 @@ public record LecturerRequestDto (
          String email,
          @NotNull
          @Past
-         Date dob,
+         LocalDate dob,
          @NotNull
          @Positive
          Integer departmentId

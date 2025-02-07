@@ -1,5 +1,7 @@
 package com.spring.boot.jpa.Persistence.dtos.lecturer;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public record LecturerResponseDto (
@@ -7,7 +9,8 @@ public record LecturerResponseDto (
         String lecturerNumber,
         String firstname,
         String lastname,
-        Date dob,
+        LocalDate dob,
+        LocalDateTime enrollment,
         String address,
         String province,
         String district,

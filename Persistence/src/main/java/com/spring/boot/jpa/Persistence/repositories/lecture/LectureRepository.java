@@ -13,9 +13,9 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     List<Lecture> findAllByStartTimeBetween(Timestamp start, Timestamp end);
     @Query(value = "SELECT l FROM Lecture l WHERE l.lectureCode = :code")
     Optional<Lecture> findByLectureCode(String code);
-    @Query(value = "SELECT l FROM Lecture l WHERE l.course = :courseId")
+    @Query(value = "SELECT l FROM Lecture l WHERE l.course.courseId = :courseId")
     List<Lecture> findAllByCourseId(Integer courseId);
-    @Query(value = "SELECT l FROM Lecture l WHERE l.lecturer = :lecturerId")
+    @Query(value = "SELECT l FROM Lecture l WHERE l.lecturer.id = :lecturerId")
     List<Lecture> findAllByLecturerId(Integer lecturerId);
 
     @Query(value = "DELETE FROM Lecture l WHERE l.lectureCode = :code")

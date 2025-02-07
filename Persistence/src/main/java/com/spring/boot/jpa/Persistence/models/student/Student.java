@@ -7,11 +7,14 @@ import com.spring.boot.jpa.Persistence.models.program.Program;
 import com.spring.boot.jpa.Persistence.models.school.School;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.core.annotation.AliasFor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
@@ -28,7 +31,13 @@ public class Student extends EntityBaseClass {
     private String studentNumber;
 
     //@Generated
-    private Date enrollmentDate;
+    //@CreationTimestamp
+//    @PrePersist
+//    void onCreate(){
+//        enrollmentDate = LocalDateTime.now();
+//    }
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime enrollmentDate;
 
     @ManyToOne
     @JoinColumn(name = "school_id")

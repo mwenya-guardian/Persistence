@@ -88,7 +88,7 @@ public class PersistenceApplication {
 				student.setStudentNumber(faker.number().numberBetween(1999, 2500) +""+ faker.number().randomNumber(6, true));
 				student.setFirstname(faker.name().firstName());
 				student.setLastname(faker.name().lastName());
-				student.setDob(new Date(faker.date().birthday(17, 30).getTime()));
+				student.setDob(new Date(faker.date().birthday(17, 30).getTime()).toLocalDate());
 				student.setAddress(faker.address().streetAddress());
 				student.setPhoneNumber(faker.phoneNumber().phoneNumber());
 				student.setNrcNumber(new StringBuilder().append(faker.number().randomNumber(6, true))
@@ -104,7 +104,7 @@ public class PersistenceApplication {
 						faker.date().between(
 						new java.util.Date(),
 						new java.util.Date(2000, 01, 01)
-						).getTime())
+						).getTime()).toLocalDate().atStartOfDay()
 				);
 				student.setProgram(i%2 == 0? program: program2);
 				student.setSchool(i%2 == 0? school: school2);

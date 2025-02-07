@@ -13,6 +13,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -28,6 +29,8 @@ public class Lecturer extends EntityBaseClass {
     private String nrcNumber;
     @Column(unique = true, updatable = false, name = "lecturer_id")
     private String lecturerNumber;
+    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime employmentDate;
 
     @ManyToOne
     @JoinColumn

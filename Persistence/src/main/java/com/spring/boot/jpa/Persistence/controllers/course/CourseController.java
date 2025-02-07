@@ -24,7 +24,14 @@ public class CourseController {
     private ResponseEntity<List<CourseResponseDto>> getAllCourses(){
         return new ResponseEntity<>(courseService.findAllCourses(), HttpStatus.OK);
     }
-
+    @GetMapping("/page")
+    public ResponseEntity<List<CourseResponseDto>> getAllProgramsUsingPages(
+            @RequestParam Integer pageSize,
+            @RequestParam Integer pageNumber,
+            @RequestParam String sort
+    ){
+        return new ResponseEntity<>(courseService.findAllCoursesUsingPages(pageNumber, pageSize, sort), HttpStatus.OK);
+    }
     @GetMapping("/name")
     private ResponseEntity<List<CourseResponseDto>> getAllCourseWithName(@RequestParam String name){
         return new ResponseEntity<>(courseService.findAllCourseByName(name), HttpStatus.OK);

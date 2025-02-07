@@ -9,7 +9,10 @@ import com.spring.boot.jpa.Persistence.repositories.lecture.LectureRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -48,6 +51,17 @@ public class LectureService {
         return modelMappers.mapToLectureResponse(updatedLecture);
     }
     //Retrieve
+    public List<LectureResponseDto> findAllLecturesUsingPages(Integer pageNumber, Integer pageSize, String sort){
+        Pageable pageable;
+        if(!sort.isEmpty())
+            pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort).ascending());
+        else
+            pageable = PageRequest.of(pageNumber, pageSize);
+        return lectureRepository.findAll(pageable)
+                .stream()
+                .map(modelMappers::mapToLectureResponse)
+                .toList();
+    }
     public List<LectureResponseDto> findAllLectures(){
         return lectureRepository.findAll()
                 .stream()

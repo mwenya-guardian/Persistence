@@ -30,7 +30,6 @@ public class StudentController {
             @RequestParam("pageSize") Integer pageSize,
             @RequestParam("sort") String sort
     ){
-        sort = sort.substring(1, sort.lastIndexOf('"'));
         return new ResponseEntity<>(
                 studentService.findAllStudentsUsingPages(pageNumber, pageSize, sort),
                 HttpStatus.OK);
@@ -84,6 +83,16 @@ public class StudentController {
 
         return new ResponseEntity<>(
                 studentService.updateStudent(studentRequestDto, studentNumber),
+                HttpStatus.CREATED);
+    }
+    @PutMapping("/{studentNumber}/update/scalable")
+    public ResponseEntity<StudentResponseDto> updateStudentSafe(
+            @RequestBody HashMap<String, String> studentFields,
+            @PathVariable("studentNumber") String studentNumber
+    ){
+
+        return new ResponseEntity<>(
+                studentService.updateStudentCustomSafeAndScalable(studentFields, studentNumber),
                 HttpStatus.CREATED);
     }
 
