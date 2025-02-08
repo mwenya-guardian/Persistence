@@ -113,6 +113,8 @@ public class PersistenceApplication {
 						.concat(student.getLastname())
 						.concat(faker.number().randomDigitNotZero() + "")
 						.concat("gmail.com"));
+				student.setUsername(student.getStudentNumber());
+				student.setPassword(faker.number().numberBetween(9999, 999999)+"");
 				var s = studentRepository.save(student);
 				if(i == last-1){
 					//lecturer.setEmail(s.getEmail());
@@ -192,6 +194,41 @@ public class PersistenceApplication {
 			lecturerRepository.save(lecturer);
 		department.setHod(lecturer);
 		departmentRepository.save(department);
+
+		if(true){
+			Student student = new Student();
+			student.setStudentNumber("3031504689");
+			student.setFirstname(faker.name().firstName());
+			student.setLastname(faker.name().lastName());
+			student.setDob(new Date(faker.date().birthday(17, 30).getTime()).toLocalDate());
+			student.setAddress(faker.address().streetAddress());
+			student.setPhoneNumber(faker.phoneNumber().phoneNumber());
+			student.setNrcNumber(new StringBuilder().append(faker.number().randomNumber(6, true))
+					.append("/")
+					.append(faker.number().numberBetween(0, 99))
+					.append("/")
+					.append(faker.number().numberBetween(0, 5))
+					.toString());
+			student.setNationality(faker.country().name());
+			student.setProvince(faker.nation().capitalCity());
+			student.setDistrict(faker.country().capital());
+			student.setEnrollmentDate(new Date(
+					faker.date().between(
+							new java.util.Date(),
+							new java.util.Date(2000, 01, 01)
+					).getTime()).toLocalDate().atStartOfDay()
+			);
+			student.setProgram(program);
+			student.setSchool(school);
+			student.setDepartment(department);
+			student.setEmail(student.getFirstname()
+					.concat(student.getLastname())
+					.concat(faker.number().randomDigitNotZero() + "")
+					.concat("gmail.com"));
+			student.setUsername("3031504689");
+			student.setPassword("123456789");
+			var s = studentRepository.save(student);
+		}
 
 //		studentService.findAllStudentsWithCustomFields("lastname", "firstname")
 //				.stream()

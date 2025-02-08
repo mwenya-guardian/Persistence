@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"age"}))
 public class Student extends EntityBaseClass {
-    @Id
-    @GeneratedValue
-    private Integer id;
+//    @Id
+//    @GeneratedValue
+//    private Integer id;
     @Column(unique = true, name = "NRC_Number", nullable = false)
     private String nrcNumber;
     @Column(unique = true, name = "student_number")

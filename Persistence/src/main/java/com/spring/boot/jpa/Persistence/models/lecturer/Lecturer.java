@@ -22,9 +22,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lecturer extends EntityBaseClass {
-    @Id
-    @GeneratedValue
-    private Integer id;
+//    @Id
+//    @GeneratedValue
+//    private Integer id;
     @Column(unique = true, name = "nrc_number")
     private String nrcNumber;
     @Column(unique = true, updatable = false, name = "lecturer_id")
@@ -53,7 +53,7 @@ public class Lecturer extends EntityBaseClass {
     private List<Course> course;
 
     public Lecturer(Integer id){
-        this.id = id;
+        this.setId(id);
     }
 
 }

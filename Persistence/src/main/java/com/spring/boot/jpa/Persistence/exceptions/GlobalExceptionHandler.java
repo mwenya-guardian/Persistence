@@ -1,4 +1,4 @@
-package com.spring.boot.jpa.Persistence.Exceptions;
+package com.spring.boot.jpa.Persistence.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
