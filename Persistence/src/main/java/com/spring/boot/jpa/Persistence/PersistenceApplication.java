@@ -19,6 +19,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -43,7 +44,8 @@ public class PersistenceApplication {
 											   StudentService studentService,
 											   LecturerService lecturerService,
 											   StudentRepository studentRepository,
-											   ModelMappers modelMappers){
+											   ModelMappers modelMappers,
+											   PasswordEncoder passwordEncoder){
 		Faker faker = new Faker();
 		String[] nrc = new String[10], snumber = new String[10];
 		return args -> {
@@ -114,7 +116,7 @@ public class PersistenceApplication {
 						.concat(faker.number().randomDigitNotZero() + "")
 						.concat("gmail.com"));
 				student.setUsername(student.getStudentNumber());
-				student.setPassword(faker.number().numberBetween(9999, 999999)+"");
+				student.setPassword(passwordEncoder.encode(faker.number().numberBetween(9999, 999999)+""));
 				var s = studentRepository.save(student);
 				if(i == last-1){
 					//lecturer.setEmail(s.getEmail());
@@ -226,7 +228,7 @@ public class PersistenceApplication {
 					.concat(faker.number().randomDigitNotZero() + "")
 					.concat("gmail.com"));
 			student.setUsername("3031504689");
-			student.setPassword("123456789");
+			student.setPassword(passwordEncoder.encode("123456789"));
 			var s = studentRepository.save(student);
 		}
 

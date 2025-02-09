@@ -1,7 +1,7 @@
 package com.spring.boot.jpa.Persistence.Services;
 
-import com.spring.boot.jpa.Persistence.models.UserBaseClass;
-import com.spring.boot.jpa.Persistence.repositories.UserRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,13 +14,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServicePrincipal implements UserDetailsService {
-    private UserRepository userRepository;
+public class CustomUserDetailsService implements UserDetailsService {
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserBaseClass user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+        var values = getByUsername(username);
         UserDetails userDetails = new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -29,14 +29,23 @@ public class UserDetailsServicePrincipal implements UserDetailsService {
 
             @Override
             public String getPassword() {
-                return user.getPassword();
+                return (String) values[1];
             }
 
             @Override
             public String getUsername() {
-                return user.getUsername();
+                return (String) values[0];
             }
         };
         return userDetails;
+    }
+
+    private Object[] getByUsername(String username){
+        var query = entityManager.createNativeQuery("SELECT username, password FROM users WHERE username = ?");
+            query.setParameter(1, username);
+                List result = query.getResultList();
+                    if(result.isEmpty())
+                        throw new UsernameNotFoundException("User Not Found");
+           return (Object[])(result.toArray()[0]);
     }
 }

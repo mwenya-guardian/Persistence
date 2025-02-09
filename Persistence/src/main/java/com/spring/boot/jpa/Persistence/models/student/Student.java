@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.core.annotation.AliasFor;
 
@@ -20,18 +21,14 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"age"}))
 public class Student extends EntityBaseClass {
-//    @Id
-//    @GeneratedValue
-//    private Integer id;
     @Column(unique = true, name = "NRC_Number", nullable = false)
     private String nrcNumber;
     @Column(unique = true, name = "student_number")
     private String studentNumber;
 
-    //@Generated
-    //@CreationTimestamp
+//    @Generated
+//    @CreationTimestamp
 //    @PrePersist
 //    void onCreate(){
 //        enrollmentDate = LocalDateTime.now();

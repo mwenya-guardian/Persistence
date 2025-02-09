@@ -2,6 +2,7 @@ package com.spring.boot.jpa.Persistence.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.hibernate.query.sqm.PathElementException;
@@ -81,5 +82,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SemanticException.class)
     public ResponseEntity<String> handleSemanticException(SemanticException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception){
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.METHOD_NOT_ALLOWED);
     }
 }

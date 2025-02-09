@@ -1,8 +1,10 @@
 package com.spring.boot.jpa.Persistence.controllers.student;
 
+import com.spring.boot.jpa.Persistence.Services.student.StudentService;
 import com.spring.boot.jpa.Persistence.models.student.DistanceStudent;
 import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.DistanceStudentRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,16 +21,13 @@ import java.sql.Date;
 
 @RestController
 @RequestMapping("api")
+@AllArgsConstructor
 public class DistanceStudentController {
     private DistanceStudentRepository distanceStudentRepository;
 
-    public DistanceStudentController(DistanceStudentRepository distanceStudentRepository) {
-        this.distanceStudentRepository = distanceStudentRepository;
-    }
-
     @RequestMapping("/dstudents")
-    public List<DistanceStudent> getAllDistanceStudents(){
-        return distanceStudentRepository.findAll();
+    public String getAllDistanceStudents(){
+        return "sdklfo;hxgcvls;dgzidxhglxuhvlx";
     }
     @RequestMapping("/dstudents/form")
     public List<DistanceStudent> getAllDistanceStudentsForm(){

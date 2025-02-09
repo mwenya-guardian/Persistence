@@ -35,3 +35,4 @@ build/
 ### properties ###
 /src/main/resources/application.yml
 /src/main/resources/application-postgresql.yml
+src/main/java/com/spring/boot/jpa/Persistence/controllers/SessionAndTokenController.java

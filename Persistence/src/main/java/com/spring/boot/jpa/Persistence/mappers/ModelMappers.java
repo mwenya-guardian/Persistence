@@ -14,6 +14,7 @@ import com.spring.boot.jpa.Persistence.dtos.school.SchoolRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.school.SchoolResponseDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
+import com.spring.boot.jpa.Persistence.models.UserBaseClass;
 import com.spring.boot.jpa.Persistence.models.course.Course;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecture.Lecture;
@@ -25,7 +26,6 @@ import com.spring.boot.jpa.Persistence.models.student.Student;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 @Component
