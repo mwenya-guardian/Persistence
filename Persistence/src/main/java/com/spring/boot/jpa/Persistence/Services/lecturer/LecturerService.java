@@ -15,6 +15,7 @@ import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,14 +31,17 @@ public class LecturerService {
     private LecturerRepository lecturerRepository;
     @PersistenceContext
     private EntityManager entityManager;
+    private PasswordEncoder passwordEncoder;
     private ModelMappers modelMappers;
 
     //Create
     public LecturerResponseDto createLecturer(LecturerRequestDto lecturerRequestDto){
         var lecturer = modelMappers.mapToLecturer(lecturerRequestDto);
-            var lectuerNumber = new Random();
-            //lecturer.setLecturerNumber(String.valueOf(lectuerNumber.nextLong(2021000001, 2025999999)));
-            lecturer.setLecturerNumber("2021504389");
+            var lecturerNumber = new Random();
+            long number = lecturerNumber.nextLong(2018000000, 2040999999);
+            lecturer.setLecturerNumber(String.valueOf(number));
+            lecturer.setUsername(lecturer.getLecturerNumber());
+            lecturer.setPassword(passwordEncoder.encode(lecturer.getLecturerNumber()));
             lecturer = lecturerRepository.saveAndFlush(lecturer);
         return modelMappers.mapToLecturerResponse(lecturer);
     }
@@ -91,8 +95,10 @@ public class LecturerService {
         List<Selection<?>> columns = new ArrayList<>();
         Arrays.stream(args)
                 .forEach(arg ->{
-                    final String column = arg +"";
-                    columns.add(lecturerRoot.get(column));
+                    if(!arg.equals("password") && !arg.equals("username")) {
+                        final String column = arg + "";
+                        columns.add(lecturerRoot.get(column));
+                    }
                 });
         criteriaQuery.multiselect(columns);
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -104,8 +110,10 @@ public class LecturerService {
         List<Selection<?>> columns = new ArrayList<>();
         Arrays.stream(args)
                 .forEach(arg ->{
-                    final String column = String.valueOf(arg);
-                    columns.add(lecturerRoot.get(column));
+                    if(!arg.equals("password") && !arg.equals("username")) {
+                        final String column = String.valueOf(arg);
+                        columns.add(lecturerRoot.get(column));
+                    }
                 });
         Predicate studentNumberEqualTo = criteriaBuilder.equal(lecturerRoot.get("lecturerNumber"), id);
         criteriaQuery.multiselect(columns).where(studentNumberEqualTo);

@@ -16,6 +16,7 @@ import lombok.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -33,6 +34,7 @@ public class StudentService {
     private ModelMappers modelMappers;
     @PersistenceContext
     private EntityManager entityManager;
+    private PasswordEncoder passwordEncoder;
 
     //Create
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -45,6 +47,8 @@ public class StudentService {
                 newStudent.setProgram(program);
                 newStudent.setSchool(program.getSchool());
                 newStudent.setDepartment(program.getDepartment());
+                newStudent.setUsername(newStudent.getStudentNumber());
+                newStudent.setPassword(passwordEncoder.encode(newStudent.getUsername()));
             studentRepository.saveAndFlush(newStudent);
         var savedStudent = studentRepository.findByStudentNumberQuery(newStudent.getStudentNumber())
                 .orElseThrow();
@@ -53,13 +57,13 @@ public class StudentService {
 
     //Update
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    public StudentResponseDto updateStudentCustomSafeAndScalable(HashMap<String, String> map, String studentNumber){
+    public StudentResponseDto updateStudentCustomSafeAndScalable(HashMap<String, String> map, String studentNumber, String username){
         String programKey = "program";
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaUpdate<Student> updateQuery =  criteriaBuilder.createCriteriaUpdate(Student.class);
         Root<Student> studentRoot = updateQuery.from(Student.class);
             map.forEach((key, value)-> {
-                        if(!key.equals(programKey)) {
+                        if(!key.equals(programKey) && !key.equals("password")) {
                             updateQuery.set(key, value);
                         }
             });
@@ -74,6 +78,9 @@ public class StudentService {
                     persistedStudent.setProgram(program);
                     persistedStudent.setDepartment(program.getDepartment());
                     persistedStudent.setSchool(program.getSchool());
+                }
+                if(map.containsKey("password") && persistedStudent.getStudentNumber().equals(username)){
+                    persistedStudent.setPassword(passwordEncoder.encode(map.get("password")));
                 }
         return modelMappers.mapToStudentResponse(studentRepository.saveAndFlush(persistedStudent));
     }
@@ -115,8 +122,10 @@ public class StudentService {
             List<Selection<?>> columns = new ArrayList<>();
             Arrays.stream(args)
                     .forEach(arg ->{
-                        final String column = arg +"";
-                        columns.add(studentRoot.get(column));
+                        if(!arg.equals("password") && !arg.equals("username")) {
+                            final String column = arg + "";
+                            columns.add(studentRoot.get(column));
+                        }
                     });
             criteriaQuery.multiselect(columns);
         return entityManager.createQuery(criteriaQuery).getResultList();
@@ -128,8 +137,10 @@ public class StudentService {
         List<Selection<?>> columns = new ArrayList<>();
         Arrays.stream(args)
                 .forEach(arg ->{
-                    final String column = String.valueOf(arg);
-                    columns.add(studentRoot.get(column));
+                    if(!arg.equals("password")&& !arg.equals("username")) {
+                        final String column = String.valueOf(arg);
+                        columns.add(studentRoot.get(column));
+                    }
                 });
         Predicate studentNumberEqualTo = criteriaBuilder.equal(studentRoot.get("studentNumber"), studentNumber);
         criteriaQuery.multiselect(columns).where(studentNumberEqualTo);
@@ -143,7 +154,9 @@ public class StudentService {
         Root<Student> studentRoot = criteriaQuery.from(Student.class);
         Predicate[] columns = new Predicate[columnName.length];
         for(int index = 0, length = columnName.length; index < length; index++){
-            columns[index] = criteriaBuilder.like(studentRoot.get(columnName[index]), "%" +columnValue[index] + "%");
+            if(!columnValue[index].equals("password") && !columnValue[index].equals("username")) {
+                columns[index] = criteriaBuilder.like(studentRoot.get(columnName[index]), "%" + columnValue[index] + "%");
+            }
         }
         criteriaQuery.select(studentRoot).where(criteriaBuilder.and(columns));
         return entityManager.createQuery(criteriaQuery).getResultList()

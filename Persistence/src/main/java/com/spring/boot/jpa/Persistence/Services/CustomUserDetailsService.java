@@ -26,12 +26,10 @@ public class CustomUserDetailsService implements UserDetailsService {
             public Collection<? extends GrantedAuthority> getAuthorities() {
                 return List.of();
             }
-
             @Override
             public String getPassword() {
                 return (String) values[1];
             }
-
             @Override
             public String getUsername() {
                 return (String) values[0];

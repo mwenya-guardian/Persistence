@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class Student extends EntityBaseClass {
     @Column(unique = true, name = "NRC_Number", nullable = false)
     private String nrcNumber;
-    @Column(unique = true, name = "student_number")
+    @Column(unique = true, name = "student_number", updatable = false)
     private String studentNumber;
 
 //    @Generated

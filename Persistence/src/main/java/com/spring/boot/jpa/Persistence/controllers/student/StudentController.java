@@ -3,6 +3,7 @@ package com.spring.boot.jpa.Persistence.controllers.student;
 import com.spring.boot.jpa.Persistence.Services.student.StudentService;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -79,11 +80,12 @@ public class StudentController {
     @PutMapping("/{studentNumber}/update")
     public ResponseEntity<StudentResponseDto> updateStudentSafe(
             @RequestBody HashMap<String, String> studentFields,
-            @PathVariable("studentNumber") String studentNumber
+            @PathVariable("studentNumber") String studentNumber,
+            HttpServletRequest request
     ){
-
+        String username = request.getUserPrincipal().getName();
         return new ResponseEntity<>(
-                studentService.updateStudentCustomSafeAndScalable(studentFields, studentNumber),
+                studentService.updateStudentCustomSafeAndScalable(studentFields, studentNumber, username),
                 HttpStatus.CREATED);
     }
 

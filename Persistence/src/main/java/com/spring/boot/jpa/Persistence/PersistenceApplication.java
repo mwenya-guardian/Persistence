@@ -83,6 +83,8 @@ public class PersistenceApplication {
 				lecturer.setDepartment(department);
 				lecturer.setDepartmentHead(department);
 				lecturer.setLecturerNumber("202177123");
+				lecturer.setUsername(lecturer.getLecturerNumber());
+				lecturer.setPassword(passwordEncoder.encode(lecturer.getLecturerNumber()));
 			//lecturer = lecturerRepository.save(lecturer);
 			int last = 100;
 			for(int i = 0, j = 0; i < last; i++) {
@@ -191,6 +193,8 @@ public class PersistenceApplication {
 			department2.setHod(lecturer);
 			departmentRepository.save(department2);
 			lecturer.setLecturerNumber("2021873649");
+			lecturer.setUsername(lecturer.getLecturerNumber());
+			lecturer.setPassword(passwordEncoder.encode(lecturer.getLecturerNumber()));
 			lecturer.setId(null);
 			lecturer.setNrcNumber("648068/64/1");
 			lecturerRepository.save(lecturer);
