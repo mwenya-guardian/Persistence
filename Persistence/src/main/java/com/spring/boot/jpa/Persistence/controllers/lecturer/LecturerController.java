@@ -1,6 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.lecturer;
 
-import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
+import com.spring.boot.jpa.Persistence.services.lecturer.LecturerService;
 import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerResponseDto;
 import jakarta.validation.Valid;

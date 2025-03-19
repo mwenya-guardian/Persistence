@@ -1,6 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.school;
 
-import com.spring.boot.jpa.Persistence.Services.school.SchoolService;
+import com.spring.boot.jpa.Persistence.services.school.SchoolService;
 import com.spring.boot.jpa.Persistence.dtos.school.SchoolRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.school.SchoolResponseDto;
 import lombok.AllArgsConstructor;

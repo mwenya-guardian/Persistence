@@ -1,7 +1,6 @@
 package com.spring.boot.jpa.Persistence.security;
 
-import com.spring.boot.jpa.Persistence.Services.CustomUserDetailsService;
-import jakarta.servlet.Filter;
+import com.spring.boot.jpa.Persistence.services.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -42,9 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             username = jwtService.extractUserName(token);
         }
         //Generating token
-        else if(securityContext != null && securityContext.isAuthenticated() && request.getRequestURI().equals("/login")){
+        else if(securityContext != null && securityContext.isAuthenticated() && request.getRequestURI().equals("/api/login")){
             String name = request.getUserPrincipal().getName();
-            String generatedToken = jwtService.generateToken(name, 1);
+            String generatedToken = jwtService.generateToken(name, 8);
             response.addHeader("access_token", generatedToken);
             response.addHeader("Access-Control-Expose-Headers", "access_token");
         }

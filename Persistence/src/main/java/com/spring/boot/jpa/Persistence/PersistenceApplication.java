@@ -1,9 +1,8 @@
 package com.spring.boot.jpa.Persistence;
 
 import com.github.javafaker.Faker;
-import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
-import com.spring.boot.jpa.Persistence.Services.student.StudentService;
-import com.spring.boot.jpa.Persistence.dtos.lecturer.LecturerRequestDto;
+import com.spring.boot.jpa.Persistence.services.lecturer.LecturerService;
+import com.spring.boot.jpa.Persistence.services.student.StudentService;
 import com.spring.boot.jpa.Persistence.mappers.ModelMappers;
 import com.spring.boot.jpa.Persistence.models.department.Department;
 import com.spring.boot.jpa.Persistence.models.lecturer.Lecturer;
@@ -22,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
-import java.util.Arrays;
 
 
 //In the beginning, there was darkness
@@ -36,7 +34,7 @@ public class PersistenceApplication {
 		SpringApplication.run(PersistenceApplication.class, args);
 	}
 
-	@Bean
+//	@Bean
 	public CommandLineRunner commandLineRunner(SchoolRepository schoolRepository,
 											   DepartmentRepository departmentRepository,
 											   ProgramRepository programRepository,

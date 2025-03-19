@@ -1,11 +1,10 @@
 package com.spring.boot.jpa.Persistence.controllers.course;
 
-import com.spring.boot.jpa.Persistence.Services.course.CourseService;
+import com.spring.boot.jpa.Persistence.services.course.CourseService;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.course.CourseResponseDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.Contract;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

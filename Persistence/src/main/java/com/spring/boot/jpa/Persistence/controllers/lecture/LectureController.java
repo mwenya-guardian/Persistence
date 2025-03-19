@@ -1,7 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.lecture;
 
-import com.spring.boot.jpa.Persistence.Services.lecture.LectureService;
-import com.spring.boot.jpa.Persistence.Services.lecturer.LecturerService;
+import com.spring.boot.jpa.Persistence.services.lecture.LectureService;
 import com.spring.boot.jpa.Persistence.dtos.lecture.LectureRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.lecture.LectureResponseDto;
 import lombok.AllArgsConstructor;

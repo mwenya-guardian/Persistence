@@ -1,8 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.student;
 
-import com.spring.boot.jpa.Persistence.Services.student.StudentService;
 import com.spring.boot.jpa.Persistence.models.student.DistanceStudent;
-import com.spring.boot.jpa.Persistence.models.student.Student;
 import com.spring.boot.jpa.Persistence.repositories.student.DistanceStudentRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;

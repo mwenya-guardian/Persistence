@@ -1,6 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.department;
 
-import com.spring.boot.jpa.Persistence.Services.department.DepartmentService;
+import com.spring.boot.jpa.Persistence.services.department.DepartmentService;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.department.DepartmentResponseDto;
 import jakarta.validation.Valid;

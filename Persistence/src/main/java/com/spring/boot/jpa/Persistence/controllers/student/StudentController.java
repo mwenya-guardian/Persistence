@@ -1,6 +1,6 @@
 package com.spring.boot.jpa.Persistence.controllers.student;
 
-import com.spring.boot.jpa.Persistence.Services.student.StudentService;
+import com.spring.boot.jpa.Persistence.services.student.StudentService;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentRequestDto;
 import com.spring.boot.jpa.Persistence.dtos.student.StudentResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
