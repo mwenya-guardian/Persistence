@@ -1,4 +1,4 @@
-HELP.md
+	HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -36,3 +36,4 @@ build/
 /src/main/resources/application.yml
 /src/main/resources/application-postgresql.yml
 src/main/java/com/spring/boot/jpa/Persistence/controllers/SessionAndTokenController.java
+artifacts/
